@@ -1,0 +1,476 @@
+"""
+Content Generator for Jachtexamen Blog
+Alternates between OpenAI and Claude APIs to generate Dutch blog articles
+"""
+
+import asyncio
+import json
+import os
+import re
+from datetime import datetime
+from typing import Dict, List, Optional, Tuple
+import aiohttp
+from tenacity import retry, stop_after_attempt, wait_exponential
+from loguru import logger
+import openai
+import anthropic
+from slugify import slugify
+
+from config.settings import Settings, API_CONFIG, QA_REQUIREMENTS
+from config.prompts import (
+    BLOG_PROMPT_TEMPLATE, 
+    TITLE_GENERATION_PROMPT, 
+    META_DESCRIPTION_PROMPT,
+    EXAM_QUESTION_PROMPT
+)
+
+
+class ContentGenerator:
+    """Generates blog content using AI APIs with rotation and retry logic"""
+    
+    def __init__(self):
+        self.settings = Settings()
+        
+        # Initialize API clients with minimal configuration
+        try:
+            if self.settings.openai_api_key and self.settings.openai_api_key != "your_openai_api_key_here":
+                self.openai_client = openai.OpenAI(
+                    api_key=self.settings.openai_api_key
+                )
+                logger.info("OpenAI client initialized successfully")
+            else:
+                self.openai_client = None
+                logger.warning("OpenAI API key not configured")
+        except Exception as e:
+            logger.warning(f"OpenAI client initialization issue: {e}")
+            self.openai_client = None
+            
+        try:
+            if self.settings.anthropic_api_key and self.settings.anthropic_api_key != "your_claude_api_key_here":
+                self.claude_client = anthropic.Anthropic(
+                    api_key=self.settings.anthropic_api_key
+                )
+                logger.info("Anthropic client initialized successfully")
+            else:
+                self.claude_client = None
+                logger.warning("Anthropic API key not configured")
+        except Exception as e:
+            logger.warning(f"Anthropic client initialization issue: {e}")
+            self.claude_client = None
+            
+        self.last_used_api = "claude"  # Start with Claude, so first call uses OpenAI
+        self.api_usage_count = {"openai": 0, "claude": 0}
+        
+    async def generate_article(self, topic: Dict) -> Optional[Dict]:
+        """Generate a complete blog article from topic"""
+        try:
+            logger.info(f"Generating article for topic: {topic['title']}")
+            
+            # Select API to use
+            api_to_use = self._get_next_api()
+            
+            # Generate content
+            content_result = await self._generate_content_with_api(topic, api_to_use)
+            if not content_result:
+                # Try with alternate API if first fails
+                alternate_api = "claude" if api_to_use == "openai" else "openai"
+                logger.warning(f"Retrying with {alternate_api} API")
+                content_result = await self._generate_content_with_api(topic, alternate_api)
+                
+            if not content_result:
+                logger.error(f"Failed to generate content for topic: {topic['title']}")
+                return None
+            
+            # Parse generated content
+            article_data = self._parse_generated_content(content_result, topic)
+            
+            # Quality assurance check
+            if not self._passes_qa_check(article_data):
+                logger.warning(f"Article failed QA check, regenerating...")
+                return await self.generate_article(topic)  # Retry once
+            
+            # Generate additional metadata
+            article_data = await self._enhance_article_metadata(article_data)
+            
+            logger.info(f"Successfully generated article: {article_data['title']}")
+            return article_data
+            
+        except Exception as e:
+            logger.error(f"Error generating article: {e}")
+            return None
+    
+    def _get_next_api(self) -> str:
+        """Get next API to use based on rotation pattern"""
+        if API_CONFIG["rotation_pattern"] == "alternating":
+            if self.last_used_api == "openai":
+                self.last_used_api = "claude"
+                return "claude"
+            else:
+                self.last_used_api = "openai"
+                return "openai"
+        elif API_CONFIG["rotation_pattern"] == "round_robin":
+            # Use the API with fewer calls
+            if self.api_usage_count["openai"] <= self.api_usage_count["claude"]:
+                self.last_used_api = "openai"
+                return "openai"
+            else:
+                self.last_used_api = "claude"
+                return "claude"
+        else:
+            # Default to alternating
+            return self._get_next_api()
+    
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=4, max=10)
+    )
+    async def _generate_content_with_api(self, topic: Dict, api: str) -> Optional[str]:
+        """Generate content using specified API with retry logic"""
+        try:
+            prompt = self._build_content_prompt(topic)
+            
+            if api == "openai":
+                return await self._call_openai(prompt)
+            elif api == "claude":
+                return await self._call_claude(prompt)
+            else:
+                raise ValueError(f"Unknown API: {api}")
+                
+        except Exception as e:
+            logger.error(f"Error calling {api} API: {e}")
+            raise
+    
+    async def _call_openai(self, prompt: str) -> str:
+        """Call OpenAI API"""
+        try:
+            response = self.openai_client.chat.completions.create(
+                model=API_CONFIG["openai"]["model"],
+                messages=[
+                    {"role": "system", "content": "Je bent een expert in Nederlandse jacht en natuurbeheer. Schrijf professionele, educatieve content voor jachtexamen kandidaten."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=API_CONFIG["openai"]["temperature"],
+                max_tokens=API_CONFIG["openai"]["max_tokens"],
+                top_p=API_CONFIG["openai"]["top_p"],
+                frequency_penalty=API_CONFIG["openai"]["frequency_penalty"],
+                presence_penalty=API_CONFIG["openai"]["presence_penalty"]
+            )
+            
+            self.api_usage_count["openai"] += 1
+            content = response.choices[0].message.content
+            logger.info("Successfully called OpenAI API")
+            return content
+            
+        except Exception as e:
+            logger.error(f"OpenAI API error: {e}")
+            raise
+    
+    async def _call_claude(self, prompt: str) -> str:
+        """Call Claude API"""
+        try:
+            response = self.claude_client.messages.create(
+                model=API_CONFIG["claude"]["model"],
+                max_tokens=API_CONFIG["claude"]["max_tokens"],
+                temperature=API_CONFIG["claude"]["temperature"],
+                top_p=API_CONFIG["claude"]["top_p"],
+                system="Je bent een expert in Nederlandse jacht en natuurbeheer. Schrijf professionele, educatieve content voor jachtexamen kandidaten.",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
+            )
+            
+            self.api_usage_count["claude"] += 1
+            content = response.content[0].text
+            logger.info("Successfully called Claude API")
+            return content
+            
+        except Exception as e:
+            logger.error(f"Claude API error: {e}")
+            raise
+    
+    def _build_content_prompt(self, topic: Dict) -> str:
+        """Build prompt for content generation"""
+        primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
+        secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
+        
+        return BLOG_PROMPT_TEMPLATE.format(
+            topic=topic["title"],
+            primary_keyword=primary_keyword,
+            secondary_keywords=", ".join(secondary_keywords)
+        )
+    
+    def _parse_generated_content(self, content: str, topic: Dict) -> Dict:
+        """Parse generated content and extract components"""
+        lines = content.split('\n')
+        
+        # Extract title (first non-empty line or H1)
+        title = self._extract_title(content, topic)
+        
+        # Extract meta description if present
+        meta_description = self._extract_meta_description(content)
+        
+        # Clean content - remove title if it's separate, format HTML
+        cleaned_content = self._clean_and_format_content(content, title)
+        
+        # Calculate reading time
+        reading_time = self._calculate_reading_time(cleaned_content)
+        
+        # Generate slug
+        slug = slugify(title, max_length=50)
+        
+        # Extract or generate excerpt
+        excerpt = self._generate_excerpt(cleaned_content)
+        
+        return {
+            "title": title,
+            "slug": slug,
+            "content": cleaned_content,
+            "excerpt": excerpt,
+            "meta_description": meta_description,
+            "tags": topic.get("keywords", []),
+            "primary_keyword": topic["keywords"][0] if topic["keywords"] else title.split()[0],
+            "secondary_keywords": topic["keywords"][1:] if len(topic["keywords"]) > 1 else [],
+            "category": topic.get("category", "algemeen"),
+            "topic_id": topic["id"],
+            "read_time": reading_time,
+            "language": "nl-NL",
+            "author": "Jachtexamen Expert",
+            "created_at": datetime.now().isoformat()
+        }
+    
+    def _extract_title(self, content: str, topic: Dict) -> str:
+        """Extract title from content or fallback to topic title"""
+        lines = content.split('\n')
+        
+        # Look for H1 tag
+        h1_match = re.search(r'<h1[^>]*>(.*?)</h1>', content, re.IGNORECASE)
+        if h1_match:
+            return h1_match.group(1).strip()
+        
+        # Look for markdown H1
+        for line in lines:
+            if line.strip().startswith('# '):
+                return line.strip()[2:].strip()
+        
+        # Look for first bold line or capitalized line
+        for line in lines:
+            line = line.strip()
+            if line and (line.isupper() or line.startswith('**')):
+                return line.replace('**', '').strip()
+        
+        # Fallback to topic title
+        return topic["title"]
+    
+    def _extract_meta_description(self, content: str) -> Optional[str]:
+        """Extract meta description from content if present"""
+        # Look for explicit meta description in content
+        meta_match = re.search(r'Meta beschrijving:\s*(.+)', content, re.IGNORECASE)
+        if meta_match:
+            return meta_match.group(1).strip()
+        
+        return None
+    
+    def _clean_and_format_content(self, content: str, title: str) -> str:
+        """Clean and format content to proper HTML"""
+        # Remove the title if it appears at the beginning
+        content = re.sub(rf'^#?\s*{re.escape(title)}\s*\n', '', content, flags=re.IGNORECASE)
+        
+        # Remove meta description lines
+        content = re.sub(r'Meta beschrijving:.*?\n', '', content, flags=re.IGNORECASE)
+        
+        # Convert markdown-style headers to HTML
+        content = re.sub(r'^## (.+)$', r'<h2>\1</h2>', content, flags=re.MULTILINE)
+        content = re.sub(r'^### (.+)$', r'<h3>\1</h3>', content, flags=re.MULTILINE)
+        content = re.sub(r'^\* (.+)$', r'<li>\1</li>', content, flags=re.MULTILINE)
+        content = re.sub(r'^(\d+)\. (.+)$', r'<li>\2</li>', content, flags=re.MULTILINE)
+        
+        # Wrap consecutive <li> elements in <ul>
+        content = re.sub(r'(<li>.*?</li>(?:\s*<li>.*?</li>)*)', r'<ul>\1</ul>', content, flags=re.DOTALL)
+        
+        # Convert double newlines to paragraphs
+        paragraphs = content.split('\n\n')
+        formatted_paragraphs = []
+        
+        for paragraph in paragraphs:
+            paragraph = paragraph.strip()
+            if paragraph and not paragraph.startswith('<'):
+                formatted_paragraphs.append(f'<p>{paragraph}</p>')
+            elif paragraph:
+                formatted_paragraphs.append(paragraph)
+        
+        return '\n\n'.join(formatted_paragraphs)
+    
+    def _calculate_reading_time(self, content: str) -> int:
+        """Calculate reading time in minutes"""
+        # Remove HTML tags for word count
+        text_content = re.sub(r'<[^>]+>', '', content)
+        word_count = len(text_content.split())
+        
+        # Average reading speed: 250 words per minute
+        reading_time = max(1, round(word_count / 250))
+        return reading_time
+    
+    def _generate_excerpt(self, content: str) -> str:
+        """Generate excerpt from content"""
+        # Remove HTML tags
+        text_content = re.sub(r'<[^>]+>', '', content)
+        
+        # Get first paragraph or first 160 characters
+        paragraphs = text_content.split('\n\n')
+        first_paragraph = paragraphs[0] if paragraphs else text_content
+        
+        if len(first_paragraph) <= 160:
+            return first_paragraph.strip()
+        else:
+            return first_paragraph[:160].rsplit(' ', 1)[0] + '...'
+    
+    def _passes_qa_check(self, article: Dict) -> bool:
+        """Check if article meets quality requirements"""
+        content = article["content"]
+        title = article["title"]
+        
+        # Remove HTML tags for text analysis
+        text_content = re.sub(r'<[^>]+>', '', content)
+        word_count = len(text_content.split())
+        
+        # Check minimum word count
+        if word_count < QA_REQUIREMENTS["min_words"]:
+            logger.warning(f"Article too short: {word_count} words (min: {QA_REQUIREMENTS['min_words']})")
+            return False
+        
+        # Check maximum word count
+        if word_count > QA_REQUIREMENTS["max_words"]:
+            logger.warning(f"Article too long: {word_count} words (max: {QA_REQUIREMENTS['max_words']})")
+            return False
+        
+        # Check title length
+        if len(title) < 30 or len(title) > 70:
+            logger.warning(f"Title length issue: {len(title)} characters")
+            return False
+        
+        # Check for required sections
+        content_lower = content.lower()
+        has_intro = any(section in content_lower for section in ["inleiding", "introductie"])
+        has_conclusion = any(section in content_lower for section in ["conclusie", "samenvatting", "slot"])
+        
+        if not (has_intro and has_conclusion):
+            logger.warning("Missing required sections (intro/conclusion)")
+            return False
+        
+        # Check keyword density
+        primary_keyword = article.get("primary_keyword", "").lower()
+        if primary_keyword:
+            keyword_count = text_content.lower().count(primary_keyword)
+            keyword_density = keyword_count / word_count
+            
+            if keyword_density < QA_REQUIREMENTS["keyword_density_min"] or keyword_density > QA_REQUIREMENTS["keyword_density_max"]:
+                logger.warning(f"Keyword density issue: {keyword_density:.3f}")
+                return False
+        
+        return True
+    
+    async def _enhance_article_metadata(self, article: Dict) -> Dict:
+        """Enhance article with additional metadata like meta description"""
+        # Generate meta description if not present
+        if not article.get("meta_description"):
+            article["meta_description"] = await self._generate_meta_description(article)
+        
+        # Generate exam questions
+        article["exam_questions"] = await self._generate_exam_questions(article)
+        
+        return article
+    
+    async def _generate_meta_description(self, article: Dict) -> str:
+        """Generate meta description for article"""
+        try:
+            prompt = META_DESCRIPTION_PROMPT.format(
+                title=article["title"],
+                primary_keyword=article["primary_keyword"],
+                topic=article["title"]
+            )
+            
+            # Use the last used API for consistency
+            api_to_use = self.last_used_api
+            meta_description = await self._generate_content_with_api({"title": "meta"}, api_to_use)
+            
+            if meta_description and len(meta_description) <= 160:
+                return meta_description.strip()
+            
+        except Exception as e:
+            logger.error(f"Error generating meta description: {e}")
+        
+        # Fallback to automatic generation
+        return f"Leer alles over {article['primary_keyword']} voor je jachtexamen. ✓ Praktische tips ✓ Examenvragen ✓ 2024 update. Start nu met oefenen!"
+    
+    async def _generate_exam_questions(self, article: Dict) -> List[Dict]:
+        """Generate exam questions based on article content"""
+        try:
+            # Get first 500 words of content for question generation
+            text_content = re.sub(r'<[^>]+>', '', article["content"])
+            content_excerpt = ' '.join(text_content.split()[:500])
+            
+            prompt = EXAM_QUESTION_PROMPT.format(
+                article_content=content_excerpt,
+                main_topic=article["title"]
+            )
+            
+            # Use the last used API
+            api_to_use = self.last_used_api
+            questions_json = await self._generate_content_with_api({"title": "questions"}, api_to_use)
+            
+            # Parse JSON response
+            try:
+                questions = json.loads(questions_json)
+                return questions if isinstance(questions, list) else []
+            except json.JSONDecodeError:
+                logger.warning("Failed to parse exam questions JSON")
+                return []
+                
+        except Exception as e:
+            logger.error(f"Error generating exam questions: {e}")
+            return []
+    
+    def get_generation_stats(self) -> Dict:
+        """Get content generation statistics"""
+        total_calls = sum(self.api_usage_count.values())
+        
+        return {
+            "total_api_calls": total_calls,
+            "openai_calls": self.api_usage_count["openai"],
+            "claude_calls": self.api_usage_count["claude"],
+            "last_used_api": self.last_used_api,
+            "openai_percentage": (self.api_usage_count["openai"] / total_calls * 100) if total_calls > 0 else 0,
+            "claude_percentage": (self.api_usage_count["claude"] / total_calls * 100) if total_calls > 0 else 0
+        }
+
+
+# Utility functions for content validation
+def validate_dutch_content(content: str) -> bool:
+    """Validate that content is in Dutch language"""
+    try:
+        from langdetect import detect
+        return detect(content) == 'nl'
+    except:
+        # Fallback: check for common Dutch words
+        dutch_indicators = ['de', 'het', 'een', 'van', 'in', 'voor', 'met', 'op', 'te', 'is']
+        content_lower = content.lower()
+        dutch_word_count = sum(1 for word in dutch_indicators if word in content_lower)
+        return dutch_word_count >= 3
+    
+def extract_internal_link_opportunities(content: str, available_topics: List[str]) -> List[Dict]:
+    """Extract opportunities for internal linking"""
+    opportunities = []
+    content_lower = content.lower()
+    
+    for topic in available_topics:
+        topic_words = topic.lower().split()
+        main_keyword = topic_words[0] if topic_words else topic
+        
+        if main_keyword in content_lower and len(main_keyword) > 3:
+            opportunities.append({
+                "keyword": main_keyword,
+                "target_topic": topic,
+                "relevance": len(topic_words)  # Simple relevance scoring
+            })
+    
+    return sorted(opportunities, key=lambda x: x["relevance"], reverse=True)[:5] 
