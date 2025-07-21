@@ -3,22 +3,57 @@ AI Prompt templates for content generation
 """
 
 BLOG_PROMPT_TEMPLATE = """
-Schrijf een uitgebreid blogartikel in het Nederlands voor een jachtexamen voorbereidingsplatform.
+Schrijf een uitgebreid en kwalitatief hoogstaand blogartikel in het Nederlands voor een jachtexamen voorbereidingsplatform.
+
+🎯 FOCUS: Kwaliteit boven kwantiteit - minimaal 500 woorden, maar ga voor diepte en waarde!
 
 ONDERWERP: {topic}
 PRIMAIRE KEYWORD: {primary_keyword}
 SECUNDAIRE KEYWORDS: {secondary_keywords}
 
-STRUCTUUR VEREISTEN:
-1. Pakkende titel (50-60 karakters) met primaire keyword
-2. Inleiding (150-200 woorden) - introduceer het onderwerp en waarom het belangrijk is voor het jachtexamen
-3. 4-6 hoofdsecties met H2 koppen
-4. Minimaal 2 subsecties per hoofdsectie met H3 koppen
-5. Bullet points of genummerde lijsten waar relevant
-6. Praktische voorbeelden en examenvragen
-7. Conclusie met call-to-action naar oefenexamens
+VERPLICHTE STRUCTUUR (minimaal 1500 woorden):
 
-SEO VEREISTEN:
+1. TITEL (H1): Pakkende titel (50-60 karakters) met primaire keyword
+
+2. INLEIDING (100-150 woorden):
+   - Introduceer het onderwerp helder en boeiend
+   - Waarom is dit belangrijk voor het jachtexamen?
+   - Wat gaat de lezer leren?
+   - Maak de lezer nieuwsgierig
+
+3. HOOFDSECTIE 1 - THEORIE & ACHTERGROND (120-180 woorden):
+   - Uitleg van de basistheorie
+   - Relevante wetgeving en regels
+   - Praktische voorbeelden
+   - Historische context indien relevant
+
+4. HOOFDSECTIE 2 - PRAKTISCHE TOEPASSING (120-180 woorden):
+   - Stap-voor-stap handleiding
+   - Praktische tips en trucs
+   - Do's and don'ts
+   - Veelgemaakte fouten vermijden
+
+5. HOOFDSECTIE 3 - EXAMENGERELATEERD (100-150 woorden):
+   - Specifieke examenvragen
+   - Leerdoelen en kennis
+   - Studie-tips
+   - Wat wordt er getoetst?
+
+6. CONCLUSIE EN VERVOLGSTAPPEN (80-120 woorden):
+   - Samenvatting hoofdpunten
+   - Praktische vervolgstappen
+   - Call-to-action naar oefenexamens
+   - Motiverende afsluiting
+
+EXTRA VEREISTEN:
+- Gebruik H2 en H3 koppen voor structuur
+- Voeg bullet points en genummerde lijsten toe
+- Minimaal 5 concrete voorbeelden
+- Minimaal 3 praktische tips per sectie
+- Vermeld relevante wetten en regels
+- Voeg veiligheidswaarschuwingen toe waar relevant
+
+SEO OPTIMALISATIE:
 - Keyword dichtheid: 1-2% voor primaire keyword
 - Natuurlijke integratie van secundaire keywords
 - Interne link suggesties naar gerelateerde onderwerpen
@@ -26,16 +61,19 @@ SEO VEREISTEN:
 
 TONE OF VOICE:
 - Professioneel maar toegankelijk
-- Educatief en informatief
+- Zeer educatief en informatief
 - Gericht op examenkandidaten
 - Gebruik Nederlandse jacht terminologie
+- Friendly en bemoedigend
 
-OUTPUT FORMAAT:
-- HTML geformatteerd
-- Inclusief schema markup suggesties
-- Leestijd berekening
+💡 KWALITEITSFOCUS: Schrijf een informatief artikel van 500-1000 woorden dat echt waarde toevoegt!
 
-Begin nu met het schrijven van het artikel:
+- Focus op duidelijke, praktische informatie
+- Gebruik concrete voorbeelden waar relevant  
+- Schrijf voor examenkandidaten die snel willen leren
+- Kwaliteit is belangrijker dan lengte
+
+✍️ SCHRIJF NU HET KWALITATIEVE ARTIKEL:
 """
 
 TITLE_GENERATION_PROMPT = """
@@ -185,4 +223,63 @@ Format als JSON array:
     "difficulty": "makkelijk"
   }
 ]
+"""
+
+# Sample experimental prompt for Google Sheets testing
+EXPERIMENTAL_SAMPLE_PROMPT = """
+Schrijf een ULTRA-GEDETAILLEERD en ZEER UITGEBREID jachtexamen artikel in het Nederlands over {topic}.
+
+🎯 VERPLICHT: Minimaal 2000 woorden! Dit is NON-NEGOTIABLE!
+
+ONDERWERP: {topic}
+KEYWORDS: {primary_keyword}, {secondary_keywords}
+
+MEGA-UITGEBREIDE STRUCTUUR:
+
+📖 INLEIDING (300+ woorden):
+- Waarom is {topic} zo belangrijk voor jagers?
+- Wat ga je in dit artikel leren?
+- Historische achtergrond en ontwikkelingen
+- Huidige relevantie voor het jachtexamen
+
+🔍 THEORIE & WETGEVING (400+ woorden):
+- Uitgebreide wetgeving uitleg
+- Provinciale verschillen
+- Europese richtlijnen
+- Praktische interpretatie van regels
+
+🛠️ PRAKTISCHE HANDLEIDING (400+ woorden):
+- Stap-voor-stap instructies
+- Materiaal en benodigdheden
+- Seizoensgebonden aspecten
+- Veiligheidsprocedures
+
+⚠️ VEILIGHEID & ETHIEK (300+ woorden):
+- Veiligheidsprocedures
+- Ethische overwegingen
+- Verantwoordelijkheden
+- Risico's en preventie
+
+📝 EXAMEN VOORBEREIDING (400+ woorden):
+- Specifieke examenvragen met uitleg
+- Oefenmateriaal en bronnen
+- Veelgemaakte fouten
+- Studie-tips en geheugensteuntjes
+
+🎓 CONCLUSIE & VERVOLGSTAPPEN (200+ woorden):
+- Samenvatting van alle hoofdpunten
+- Praktische vervolgstappen
+- Aanvullende bronnen
+- Motiverende afsluiting
+
+EXTRA DETAILS TOEVOEGEN:
+- Minimaal 10 concrete voorbeelden
+- 5+ praktische tips per sectie
+- Tabellen en lijsten waar relevant
+- Citaten van experts
+- Statistieken en feiten
+
+VERGEET NIET: Wees EXTREEM gedetailleerd. Elke paragraaf minimaal 100 woorden. Gebruik veel voorbeelden!
+
+Schrijf nu het ultra-uitgebreide artikel:
 """ 

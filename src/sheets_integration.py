@@ -180,9 +180,11 @@ class SheetsManager:
                 ["EXPERIMENTAL PROMPT", "", "Test new prompts here", ""],
                 ["", "", "", ""],
                 ["POSTING FREQUENCY", "1-3 days", "How often to post", ""],
-                ["MIN WORDS", "1000", "Minimum article length", ""],
-                ["MAX WORDS", "2500", "Maximum article length", ""],
-                ["TARGET SEO SCORE", "85", "Minimum SEO score target", ""],
+                ["MIN WORDS", "500", "Minimum article length (quality focused)", ""],
+                ["MAX WORDS", "3000", "Maximum article length (increased)", ""],
+                ["TARGET SEO SCORE", "80", "Minimum SEO score target", ""],
+                ["", "", "", ""],
+                ["STATUS", "IMPROVED PROMPTS ACTIVE", "System status", ""],
             ]
             
             self.prompts_sheet.update('A1:D15', initial_data)
@@ -204,13 +206,17 @@ class SheetsManager:
     def _load_current_prompts(self):
         """Load current prompts from config into sheets"""
         try:
-            from config.prompts import BLOG_PROMPT_TEMPLATE, TITLE_GENERATION_PROMPT
+            from config.prompts import BLOG_PROMPT_TEMPLATE, TITLE_GENERATION_PROMPT, EXPERIMENTAL_SAMPLE_PROMPT
             
-            # Update the sheet with current prompts
-            self.prompts_sheet.update('B3', BLOG_PROMPT_TEMPLATE[:1000])  # Truncate if too long
+            # Update the sheet with current prompts (use more of the prompt)
+            self.prompts_sheet.update('B3', BLOG_PROMPT_TEMPLATE[:2000])  # Increased length
             self.prompts_sheet.update('B5', TITLE_GENERATION_PROMPT[:500])
+            self.prompts_sheet.update('B9', EXPERIMENTAL_SAMPLE_PROMPT[:2000])  # Add experimental prompt
             self.prompts_sheet.update('D3', datetime.now().strftime("%Y-%m-%d %H:%M"))
             self.prompts_sheet.update('D5', datetime.now().strftime("%Y-%m-%d %H:%M"))
+            self.prompts_sheet.update('D9', datetime.now().strftime("%Y-%m-%d %H:%M"))
+            
+            logger.info("✅ Loaded improved prompts into Google Sheets")
             
         except Exception as e:
             logger.error(f"Error loading current prompts: {e}")

@@ -144,12 +144,12 @@ ERROR_HANDLING = {
 
 # Quality Assurance Requirements
 QA_REQUIREMENTS = {
-    "min_words": 1000,
-    "max_words": 2500,
+    "min_words": 500,  # Realistic minimum for quality articles
+    "max_words": 3000,  # Allow comprehensive articles
     "min_paragraphs": 5,
     "required_sections": ["inleiding", "conclusie"],
     "keyword_density_min": 0.01,
-    "keyword_density_max": 0.02,
+    "keyword_density_max": 0.03,
     "min_internal_links": 3,
-    "max_internal_links": 7
+    "max_internal_links": 10
 } 

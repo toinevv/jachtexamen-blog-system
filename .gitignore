@@ -75,4 +75,5 @@ coverage.xml
 
 # Project specific
 published_articles/
-temp/ 
+temp/ *.json
+google_credentials.json
