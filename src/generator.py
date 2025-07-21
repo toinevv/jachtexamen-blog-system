@@ -58,7 +58,7 @@ class ContentGenerator:
             logger.warning(f"Anthropic client initialization issue: {e}")
             self.claude_client = None
             
-        self.last_used_api = "claude"  # Start with Claude, so first call uses OpenAI
+        self.last_used_api = "openai"  # Start with OpenAI, so first call uses Claude (more reliable)
         self.api_usage_count = {"openai": 0, "claude": 0}
         
     async def generate_article(self, topic: Dict) -> Optional[Dict]:
@@ -162,7 +162,8 @@ class ContentGenerator:
             return content
             
         except Exception as e:
-            logger.error(f"OpenAI API error: {e}")
+            logger.error(f"OpenAI API error: {type(e).__name__}: {e}")
+            logger.error(f"OpenAI client available: {self.openai_client is not None}")
             raise
     
     async def _call_claude(self, prompt: str) -> str:
@@ -185,7 +186,8 @@ class ContentGenerator:
             return content
             
         except Exception as e:
-            logger.error(f"Claude API error: {e}")
+            logger.error(f"Claude API error: {type(e).__name__}: {e}")
+            logger.error(f"Claude client available: {self.claude_client is not None}")
             raise
     
     def _build_content_prompt(self, topic: Dict) -> str:
@@ -430,6 +432,45 @@ class ContentGenerator:
             logger.error(f"Error generating exam questions: {e}")
             return []
     
+    async def test_api_connectivity(self) -> Dict:
+        """Test API connectivity with simple calls"""
+        results = {
+            "openai": {"available": False, "error": None},
+            "claude": {"available": False, "error": None}
+        }
+        
+        # Test OpenAI
+        if self.openai_client:
+            try:
+                logger.info("🧪 Testing OpenAI connectivity...")
+                response = self.openai_client.chat.completions.create(
+                    model="gpt-3.5-turbo",  # Use cheaper model for testing
+                    messages=[{"role": "user", "content": "Test"}],
+                    max_tokens=5
+                )
+                results["openai"]["available"] = True
+                logger.info("✅ OpenAI connectivity test passed")
+            except Exception as e:
+                results["openai"]["error"] = str(e)
+                logger.error(f"❌ OpenAI connectivity test failed: {e}")
+        
+        # Test Claude
+        if self.claude_client:
+            try:
+                logger.info("🧪 Testing Claude connectivity...")
+                response = self.claude_client.messages.create(
+                    model="claude-3-haiku-20240307",  # Use cheaper model for testing
+                    max_tokens=5,
+                    messages=[{"role": "user", "content": "Test"}]
+                )
+                results["claude"]["available"] = True
+                logger.info("✅ Claude connectivity test passed")
+            except Exception as e:
+                results["claude"]["error"] = str(e)
+                logger.error(f"❌ Claude connectivity test failed: {e}")
+        
+        return results
+
     def get_generation_stats(self) -> Dict:
         """Get content generation statistics"""
         total_calls = sum(self.api_usage_count.values())

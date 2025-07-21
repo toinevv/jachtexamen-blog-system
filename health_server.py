@@ -24,6 +24,8 @@ class HealthHandler(BaseHTTPRequestHandler):
             self.send_system_status()
         elif self.path == '/trigger':
             self.trigger_generation()
+        elif self.path == '/test-api':
+            self.test_api_connectivity()
         else:
             self.send_404()
     
@@ -120,6 +122,57 @@ class HealthHandler(BaseHTTPRequestHandler):
             
         except Exception as e:
             logger.error(f"Trigger error: {e}")
+            self.send_json_response(500, {"status": "error", "message": str(e)})
+    
+    def test_api_connectivity(self):
+        """Test API connectivity via HTTP"""
+        try:
+            import asyncio
+            import threading
+            
+            def run_api_test():
+                """Run API test in background thread"""
+                try:
+                    from src.generator import ContentGenerator
+                    generator = ContentGenerator()
+                    
+                    # Run the connectivity test
+                    results = asyncio.run(generator.test_api_connectivity())
+                    
+                    response = {
+                        "status": "tested",
+                        "timestamp": datetime.now().isoformat(),
+                        "results": results
+                    }
+                    
+                    # Store results temporarily for retrieval
+                    with open("/tmp/api_test_results.json", "w") as f:
+                        import json
+                        json.dump(response, f)
+                    
+                    logger.info(f"🧪 API connectivity test completed: {results}")
+                    
+                except Exception as e:
+                    logger.error(f"💥 API test failed: {e}")
+                    with open("/tmp/api_test_results.json", "w") as f:
+                        import json
+                        json.dump({"status": "error", "message": str(e)}, f)
+            
+            # Start test in background thread
+            thread = threading.Thread(target=run_api_test, daemon=True)
+            thread.start()
+            
+            response = {
+                "status": "testing",
+                "message": "API connectivity test started! Check /test-results for results.",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            self.send_json_response(200, response)
+            logger.info("🧪 API connectivity test started via HTTP")
+            
+        except Exception as e:
+            logger.error(f"API test trigger error: {e}")
             self.send_json_response(500, {"status": "error", "message": str(e)})
     
     def send_404(self):
