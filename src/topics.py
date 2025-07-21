@@ -12,16 +12,25 @@ from GoogleNews import GoogleNews
 from loguru import logger
 from config.settings import GOOGLE_NEWS_CONFIG
 import re
+from src.sheets_integration import SheetsManager
 
 
 class TopicManager:
-    """Manages blog topics and discovers new ones via Google News"""
+    """Manages blog topics with Google Sheets integration"""
     
     def __init__(self, topics_file: str = "data/topics.json", published_file: str = "data/published.json"):
         self.topics_file = topics_file
         self.published_file = published_file
         self.topics_data = self._load_topics()
         self.published_data = self._load_published()
+        
+        # Initialize Google Sheets integration
+        self.sheets_manager = SheetsManager()
+        
+        # Sync with Google Sheets if available
+        if self.sheets_manager.is_available():
+            logger.info("🔄 Syncing with Google Sheets...")
+            self._sync_with_sheets()
         
         # Initialize Google News only if API key is available
         try:
@@ -104,33 +113,30 @@ class TopicManager:
         
         return None
     
-    def mark_topic_used(self, topic_id: int) -> bool:
-        """Mark a topic as used"""
+    def mark_topic_used(self, topic_id: int, seo_score: int = None) -> bool:
+        """Mark a topic as used and update Google Sheets"""
         for topic in self.topics_data["topics"]:
             if topic["id"] == topic_id:
                 topic["used"] = True
                 topic["used_date"] = datetime.now().isoformat()
+                topic["times_used"] = topic.get("times_used", 0) + 1
+                topic["last_used"] = datetime.now().strftime("%Y-%m-%d")
+                if seo_score:
+                    topic["last_seo_score"] = seo_score
+                
                 self._save_topics()
                 logger.info(f"Marked topic {topic_id} as used: {topic['title']}")
+                
+                # Update Google Sheets if available
+                if self.sheets_manager.is_available():
+                    self.sheets_manager.update_topic_usage(topic_id, seo_score)
+                
                 return True
         
         logger.error(f"Topic with ID {topic_id} not found")
         return False
     
-    def add_published_article(self, article_data: Dict):
-        """Add article to published tracking"""
-        self.published_data["published_articles"].append({
-            "id": article_data.get("id"),
-            "title": article_data.get("title"),
-            "slug": article_data.get("slug"),
-            "topic_id": article_data.get("topic_id"),
-            "published_at": datetime.now().isoformat(),
-            "category": article_data.get("category")
-        })
-        
-        self.published_data["total_published"] += 1
-        self.published_data["last_published"] = datetime.now().isoformat()
-        self._save_published()
+
     
     def get_category_distribution(self) -> Dict[str, int]:
         """Get distribution of published articles by category"""
@@ -350,6 +356,78 @@ class TopicManager:
             "total_published": self.published_data.get("total_published", 0),
             "last_published": self.published_data.get("last_published")
         }
+
+    def _sync_with_sheets(self):
+        """Sync topics with Google Sheets (bidirectional)"""
+        try:
+            # First, push current topics to sheets
+            self.sheets_manager.sync_topics_to_sheet(self.topics_data)
+            
+            # Then check if there are updates from sheets
+            sheets_data = self.sheets_manager.sync_topics_from_sheet()
+            if sheets_data:
+                # Merge any new topics from sheets
+                existing_ids = {topic["id"] for topic in self.topics_data["topics"]}
+                new_topics = [topic for topic in sheets_data["topics"] if topic["id"] not in existing_ids]
+                
+                if new_topics:
+                    self.topics_data["topics"].extend(new_topics)
+                    self._save_topics()
+                    logger.info(f"📥 Added {len(new_topics)} new topics from Google Sheets")
+                
+                # Update existing topics with any changes from sheets
+                for sheet_topic in sheets_data["topics"]:
+                    for local_topic in self.topics_data["topics"]:
+                        if local_topic["id"] == sheet_topic["id"]:
+                            # Update fields that might have been changed in sheets
+                            local_topic.update({
+                                "title": sheet_topic["title"],
+                                "category": sheet_topic["category"],
+                                "keywords": sheet_topic["keywords"],
+                                "priority": sheet_topic["priority"],
+                                "notes": sheet_topic.get("notes", "")
+                            })
+                            break
+                
+                self._save_topics()
+                logger.info("🔄 Synchronized topics with Google Sheets")
+            
+        except Exception as e:
+            logger.error(f"Error syncing with Google Sheets: {e}")
+    
+    def add_published_article(self, article_data: Dict):
+        """Add published article to tracking and Google Sheets"""
+        # Add to local tracking
+        published_article = {
+            "id": article_data.get("id"),
+            "title": article_data.get("title"),
+            "topic_id": article_data.get("topic_id"),
+            "published_at": datetime.now().isoformat(),
+            "seo_score": article_data.get("seo_score"),
+            "word_count": article_data.get("word_count"),
+            "category": article_data.get("category")
+        }
+        
+        if "articles" not in self.published_data:
+            self.published_data["articles"] = []
+        if "stats" not in self.published_data:
+            self.published_data["stats"] = {}
+            
+        self.published_data["articles"].append(published_article)
+        self.published_data["stats"]["total_published"] = len(self.published_data["articles"])
+        self.published_data["stats"]["last_published"] = published_article["published_at"]
+        
+        self._save_published()
+        
+        # Log to Google Sheets if available
+        if self.sheets_manager.is_available():
+            self.sheets_manager.log_generated_article(article_data)
+    
+    def get_sheets_url(self) -> Optional[str]:
+        """Get the Google Sheets dashboard URL"""
+        if self.sheets_manager.is_available():
+            return self.sheets_manager.get_sheet_url()
+        return None
 
 
 # Utility functions

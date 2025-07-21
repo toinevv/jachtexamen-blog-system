@@ -26,6 +26,8 @@ class HealthHandler(BaseHTTPRequestHandler):
             self.trigger_generation()
         elif self.path == '/test-api':
             self.test_api_connectivity()
+        elif self.path == '/sheets':
+            self.get_sheets_url()
         else:
             self.send_404()
     
@@ -173,6 +175,34 @@ class HealthHandler(BaseHTTPRequestHandler):
             
         except Exception as e:
             logger.error(f"API test trigger error: {e}")
+            self.send_json_response(500, {"status": "error", "message": str(e)})
+    
+    def get_sheets_url(self):
+        """Get Google Sheets dashboard URL"""
+        try:
+            from src.topics import TopicManager
+            topic_manager = TopicManager()
+            
+            sheets_url = topic_manager.get_sheets_url()
+            
+            if sheets_url:
+                response = {
+                    "status": "available",
+                    "sheets_url": sheets_url,
+                    "message": "Click the URL to open your Google Sheets dashboard",
+                    "timestamp": datetime.now().isoformat()
+                }
+            else:
+                response = {
+                    "status": "not_configured",
+                    "message": "Google Sheets integration not configured. Set GOOGLE_SHEETS_ID and credentials.",
+                    "timestamp": datetime.now().isoformat()
+                }
+            
+            self.send_json_response(200, response)
+            
+        except Exception as e:
+            logger.error(f"Sheets URL error: {e}")
             self.send_json_response(500, {"status": "error", "message": str(e)})
     
     def send_404(self):

@@ -62,11 +62,20 @@ class RailwayBlogWorker:
                 logger.error("❌ Failed to save article to database")
                 return False
             
-            # Mark topic as used
-            self.topic_manager.mark_topic_used(topic["id"])
+            # Mark topic as used with SEO score
+            seo_score = article.get("seo_score", 0)
+            self.topic_manager.mark_topic_used(topic["id"], seo_score)
             
-            # Update published tracking
-            self.topic_manager.add_published_article(saved_article)
+            # Update published tracking with full article data
+            article_data = {
+                **saved_article,
+                "topic_id": topic["id"],
+                "seo_score": seo_score,
+                "api_used": "mock",  # Will be updated when real APIs work
+                "generation_time": "2-5 minutes",  # Estimate
+                "word_count": len(article.get("content", "").split()) if article.get("content") else 0
+            }
+            self.topic_manager.add_published_article(article_data)
             
             logger.info(f"✅ Article published successfully: {article['title']}")
             logger.info(f"📊 Article ID: {saved_article.get('id')}")

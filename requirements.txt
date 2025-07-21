@@ -17,4 +17,6 @@ pydantic==2.6.1
 pydantic-settings==2.2.1
 pytest==8.0.2
 black==24.2.0
-pytz==2025.2 
+pytz==2025.2
+gspread==6.1.4
+google-auth==2.35.0 
