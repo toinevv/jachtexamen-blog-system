@@ -22,6 +22,8 @@ class HealthHandler(BaseHTTPRequestHandler):
             self.send_health_check()
         elif self.path == '/status':
             self.send_system_status()
+        elif self.path == '/trigger':
+            self.trigger_generation()
         else:
             self.send_404()
     
@@ -80,6 +82,45 @@ class HealthHandler(BaseHTTPRequestHandler):
         
         response_json = json.dumps(data, indent=2)
         self.wfile.write(response_json.encode())
+    
+    def trigger_generation(self):
+        """Trigger manual article generation"""
+        try:
+            import asyncio
+            import threading
+            
+            def run_generation():
+                """Run generation in background thread"""
+                try:
+                    # Force update last run file to bypass schedule check
+                    import os
+                    last_run_file = "/tmp/last_blog_run.txt"
+                    if os.path.exists(last_run_file):
+                        os.remove(last_run_file)
+                    
+                    # Import and run the worker
+                    from railway_worker import main
+                    asyncio.run(main())
+                    logger.info("🎉 Manual generation completed!")
+                except Exception as e:
+                    logger.error(f"💥 Manual generation failed: {e}")
+            
+            # Start generation in background thread
+            thread = threading.Thread(target=run_generation, daemon=True)
+            thread.start()
+            
+            response = {
+                "status": "triggered",
+                "message": "Article generation started! Check logs for progress.",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            self.send_json_response(200, response)
+            logger.info("🚀 Manual article generation triggered via HTTP")
+            
+        except Exception as e:
+            logger.error(f"Trigger error: {e}")
+            self.send_json_response(500, {"status": "error", "message": str(e)})
     
     def send_404(self):
         """Send 404 response"""

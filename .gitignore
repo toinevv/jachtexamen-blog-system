@@ -38,8 +38,9 @@ MANIFEST
 logs/*.log
 *.log
 
-# Data files
-data/*.json
+# Data files - allow topics.json but ignore runtime files
+data/published.json
+data/*backup*.json
 
 # Tests
 .pytest_cache/
