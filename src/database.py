@@ -19,14 +19,16 @@ class DatabaseManager:
     def __init__(self):
         self.settings = Settings()
         try:
+            # Create Supabase client with explicit parameters only
             self.supabase: Client = create_client(
-                self.settings.supabase_url,
-                self.settings.supabase_service_key
+                supabase_url=self.settings.supabase_url,
+                supabase_key=self.settings.supabase_service_key
             )
             logger.info("✅ Supabase client initialized successfully")
         except Exception as e:
             logger.error(f"❌ Failed to initialize Supabase client: {e}")
-            # For now, we'll let it fail rather than use problematic fallbacks
+            logger.error(f"❌ URL: {self.settings.supabase_url[:20]}...")
+            logger.error(f"❌ Key: {self.settings.supabase_service_key[:20]}...")
             raise Exception(f"Cannot connect to Supabase: {e}")
         self.table_name = "blog_articles"
         
