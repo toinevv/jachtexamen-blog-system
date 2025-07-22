@@ -203,7 +203,7 @@ class SheetsManager:
         except Exception as e:
             logger.error(f"Error setting up prompts sheet: {e}")
     
-            def _load_current_prompts(self):
+    def _load_current_prompts(self):
         """Load current API-specific prompts from config into sheets"""
         try:
             from config.prompts import (
