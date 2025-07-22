@@ -18,8 +18,8 @@ from src.utils import setup_logging
 from src.topics import TopicManager
 from src.generator import ContentGenerator
 from src.seo import SEOOptimizer
-# Use mock database temporarily to avoid proxy issues
-from src.database_mock import DatabaseManager
+# Switch back to real Supabase database now that issues are resolved
+from src.database import DatabaseManager
 from loguru import logger
 
 

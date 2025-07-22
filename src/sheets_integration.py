@@ -369,12 +369,14 @@ class SheetsManager:
             # Get all values from prompts sheet
             all_values = self.prompts_sheet.get_all_values()
             
-            # Map prompt types to row numbers (approximate)
+            # Map prompt types to row numbers based on our new structure
             prompt_map = {
-                "blog": 3,  # Row 3 (index 2)
-                "title": 5,  # Row 5 (index 4)
-                "meta": 7,   # Row 7 (index 6)
-                "experimental": 9  # Row 9 (index 8)
+                "blog": 3,           # Row 3 - OpenAI prompt (backward compatibility)
+                "openai": 3,         # Row 3 - OpenAI Specific Prompt  
+                "title": 5,          # Row 5 - Title Generation Prompt
+                "meta": 7,           # Row 7 - Meta Description Prompt
+                "claude": 9,         # Row 9 - Claude Specific Prompt
+                "experimental": 9    # Row 9 - Claude prompt (backward compatibility)
             }
             
             row_index = prompt_map.get(prompt_type, 3)

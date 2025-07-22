@@ -25,6 +25,7 @@ from config.prompts import (
     OPENAI_SPECIFIC_PROMPT,
     CLAUDE_SPECIFIC_PROMPT
 )
+from src.sheets_integration import SheetsManager
 
 
 class ContentGenerator:
@@ -62,6 +63,13 @@ class ContentGenerator:
             
         self.last_used_api = "openai"  # Start with OpenAI, so first call uses Claude (more reliable)
         self.api_usage_count = {"openai": 0, "claude": 0}
+        
+        # Initialize sheets manager for custom prompts
+        self.sheets_manager = SheetsManager()
+        if self.sheets_manager.is_available():
+            logger.info("📝 Google Sheets integration available for custom prompts")
+        else:
+            logger.info("📝 Google Sheets not available, using default prompts")
         
     async def generate_article(self, topic: Dict) -> Optional[Dict]:
         """Generate a complete blog article from topic"""
@@ -206,6 +214,18 @@ class ContentGenerator:
     
     def _build_openai_prompt(self, topic: Dict, custom_prompt: str = None) -> str:
         """Build OpenAI-specific prompt optimized for longer content"""
+        # First check if there's a custom prompt in Google Sheets
+        if self.sheets_manager.is_available():
+            sheets_prompt = self.sheets_manager.get_custom_prompt("openai")
+            if sheets_prompt and sheets_prompt.strip():
+                logger.info("📝 Using custom OpenAI prompt from Google Sheets")
+                return sheets_prompt.format(
+                    topic=topic["title"],
+                    primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
+                    secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+                )
+        
+        # Fallback to passed custom prompt
         if custom_prompt:
             return custom_prompt.format(
                 topic=topic["title"],
@@ -213,6 +233,7 @@ class ContentGenerator:
                 secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
             )
         
+        # Use default OpenAI-specific prompt
         primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
         secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
         
@@ -224,6 +245,18 @@ class ContentGenerator:
     
     def _build_claude_prompt(self, topic: Dict, custom_prompt: str = None) -> str:
         """Build Claude-specific prompt optimized for longer content"""
+        # First check if there's a custom prompt in Google Sheets
+        if self.sheets_manager.is_available():
+            sheets_prompt = self.sheets_manager.get_custom_prompt("claude")
+            if sheets_prompt and sheets_prompt.strip():
+                logger.info("📝 Using custom Claude prompt from Google Sheets")
+                return sheets_prompt.format(
+                    topic=topic["title"],
+                    primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
+                    secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+                )
+        
+        # Fallback to passed custom prompt
         if custom_prompt:
             return custom_prompt.format(
                 topic=topic["title"],
@@ -231,6 +264,7 @@ class ContentGenerator:
                 secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
             )
         
+        # Use default Claude-specific prompt
         primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
         secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
         
