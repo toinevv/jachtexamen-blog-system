@@ -18,8 +18,14 @@ from src.utils import setup_logging
 from src.topics import TopicManager
 from src.generator import ContentGenerator
 from src.seo import SEOOptimizer
-# Switch back to real Supabase database now that issues are resolved
-from src.database import DatabaseManager
+# Try real Supabase first, fallback to mock if connection issues
+try:
+    from src.database import DatabaseManager
+    logger.info("✅ Using real Supabase database")
+except Exception as e:
+    logger.warning(f"⚠️ Supabase connection failed: {e}")
+    logger.warning("🔄 Falling back to mock database - articles will still generate and log to Google Sheets")
+    from src.database_mock import DatabaseManager
 from loguru import logger
 
 

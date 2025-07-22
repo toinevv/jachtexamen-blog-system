@@ -23,14 +23,11 @@ class DatabaseManager:
                 self.settings.supabase_url,
                 self.settings.supabase_service_key
             )
-        except TypeError:
-            # Fallback for version compatibility
-            import os
-            from supabase._sync.client import SyncClient
-            self.supabase = SyncClient(
-                supabase_url=self.settings.supabase_url,
-                supabase_key=self.settings.supabase_service_key
-            )
+            logger.info("✅ Supabase client initialized successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize Supabase client: {e}")
+            # For now, we'll let it fail rather than use problematic fallbacks
+            raise Exception(f"Cannot connect to Supabase: {e}")
         self.table_name = "blog_articles"
         
     @retry(
