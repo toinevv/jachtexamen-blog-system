@@ -171,13 +171,13 @@ class SheetsManager:
             initial_data = [
                 ["Setting", "Value", "Description", "Last Updated"],
                 ["", "", "", ""],
-                ["CURRENT BLOG PROMPT", "", "The main prompt used for generating articles", ""],
+                ["OPENAI SPECIFIC PROMPT", "", "Optimized prompt for OpenAI GPT-4", ""],
                 ["", "", "", ""],
                 ["TITLE GENERATION PROMPT", "", "Prompt for generating SEO titles", ""],
                 ["", "", "", ""],
                 ["META DESCRIPTION PROMPT", "", "Prompt for meta descriptions", ""],
                 ["", "", "", ""],
-                ["EXPERIMENTAL PROMPT", "", "Test new prompts here", ""],
+                ["CLAUDE SPECIFIC PROMPT", "", "Optimized prompt for Claude", ""],
                 ["", "", "", ""],
                 ["POSTING FREQUENCY", "1-3 days", "How often to post", ""],
                 ["MIN WORDS", "500", "Minimum article length (quality focused)", ""],
@@ -203,20 +203,26 @@ class SheetsManager:
         except Exception as e:
             logger.error(f"Error setting up prompts sheet: {e}")
     
-    def _load_current_prompts(self):
-        """Load current prompts from config into sheets"""
+            def _load_current_prompts(self):
+        """Load current API-specific prompts from config into sheets"""
         try:
-            from config.prompts import BLOG_PROMPT_TEMPLATE, TITLE_GENERATION_PROMPT, EXPERIMENTAL_SAMPLE_PROMPT
+            from config.prompts import (
+                BLOG_PROMPT_TEMPLATE, 
+                TITLE_GENERATION_PROMPT, 
+                EXPERIMENTAL_SAMPLE_PROMPT,
+                OPENAI_SPECIFIC_PROMPT,
+                CLAUDE_SPECIFIC_PROMPT
+            )
             
-            # Update the sheet with current prompts (use more of the prompt)
-            self.prompts_sheet.update('B3', BLOG_PROMPT_TEMPLATE[:2000])  # Increased length
+            # Update the sheet with current prompts
+            self.prompts_sheet.update('B3', OPENAI_SPECIFIC_PROMPT[:2000])  # Show OpenAI prompt
             self.prompts_sheet.update('B5', TITLE_GENERATION_PROMPT[:500])
-            self.prompts_sheet.update('B9', EXPERIMENTAL_SAMPLE_PROMPT[:2000])  # Add experimental prompt
+            self.prompts_sheet.update('B9', CLAUDE_SPECIFIC_PROMPT[:2000])  # Show Claude prompt in experimental field
             self.prompts_sheet.update('D3', datetime.now().strftime("%Y-%m-%d %H:%M"))
             self.prompts_sheet.update('D5', datetime.now().strftime("%Y-%m-%d %H:%M"))
             self.prompts_sheet.update('D9', datetime.now().strftime("%Y-%m-%d %H:%M"))
             
-            logger.info("✅ Loaded improved prompts into Google Sheets")
+            logger.info("✅ Loaded NEW API-specific prompts into Google Sheets")
             
         except Exception as e:
             logger.error(f"Error loading current prompts: {e}")
