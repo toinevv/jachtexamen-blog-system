@@ -5,7 +5,7 @@ AI Prompt templates for content generation
 BLOG_PROMPT_TEMPLATE = """
 Schrijf een uitgebreid en kwalitatief hoogstaand blogartikel in het Nederlands voor een jachtexamen voorbereidingsplatform.
 
-🎯 FOCUS: Kwaliteit boven kwantiteit - minimaal 500 woorden, maar ga voor diepte en waarde!
+🎯 FOCUS: Schrijf een praktisch artikel van 400-600 woorden met goede keyword integratie!
 
 ONDERWERP: {topic}
 PRIMAIRE KEYWORD: {primary_keyword}
@@ -66,12 +66,13 @@ TONE OF VOICE:
 - Gebruik Nederlandse jacht terminologie
 - Friendly en bemoedigend
 
-💡 KWALITEITSFOCUS: Schrijf een informatief artikel van 500-1000 woorden dat echt waarde toevoegt!
+💡 PRAKTISCHE FOCUS: Schrijf een informatief artikel van 400-600 woorden!
 
 - Focus op duidelijke, praktische informatie
+- Gebruik het primaire keyword natuurlijk door het artikel (minstens 2-3 keer)
 - Gebruik concrete voorbeelden waar relevant  
 - Schrijf voor examenkandidaten die snel willen leren
-- Kwaliteit is belangrijker dan lengte
+- Zorg voor goede keyword dichtheid zonder het geforceerd te laten klinken
 
 ✍️ SCHRIJF NU HET KWALITATIEVE ARTIKEL:
 """
