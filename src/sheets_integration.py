@@ -402,39 +402,29 @@ class SheetsManager:
             # Find the row with the matching topic ID
             all_values = self.topics_sheet.get_all_values()
             
-            for i, row in enumerate(all_values):
-                if i == 0:  # Skip header
-                    continue
+            for i, row in enumerate(all_values[1:], start=2):  # Skip header row
+                if len(row) > 0 and str(row[0]) == str(topic_id):
+                    # Update usage count
+                    current_times_used = int(row[6]) if len(row) > 6 and row[6].isdigit() else 0
+                    new_times_used = current_times_used + 1
                     
-                if row and str(row[0]) == str(topic_id):
-                    # Update usage data
-                    row_num = i + 1
-                    
-                    # Update "Used" column (F)
-                    self.topics_sheet.update(f'F{row_num}', "Yes")
-                    
-                    # Update "Times Used" column (G)
-                    current_count = int(row[6]) if row[6] else 0
-                    self.topics_sheet.update(f'G{row_num}', current_count + 1)
-                    
-                    # Update "Last Used" column (H)
-                    self.topics_sheet.update(f'H{row_num}', datetime.now().strftime("%Y-%m-%d"))
-                    
-                    # Update "SEO Score Avg" column (I) if provided
-                    if seo_score:
-                        current_avg = row[8] if row[8] else "0"
-                        try:
-                            current_avg_float = float(current_avg)
-                            # Simple running average (could be improved)
-                            new_avg = (current_avg_float + seo_score) / 2
-                            self.topics_sheet.update(f'I{row_num}', f"{new_avg:.1f}")
-                        except:
-                            self.topics_sheet.update(f'I{row_num}', str(seo_score))
-                    
-                    logger.info(f"✅ Updated topic {topic_id} usage in Google Sheets")
-                    return True
+                    # Update cells with proper range validation
+                    try:
+                        self.topics_sheet.update(f'E{i}', 'Yes')  # Used column
+                        self.topics_sheet.update(f'G{i}', str(new_times_used))  # Times Used
+                        self.topics_sheet.update(f'H{i}', datetime.now().strftime("%Y-%m-%d"))  # Last Used
+                        
+                        if seo_score:
+                            self.topics_sheet.update(f'I{i}', str(seo_score))  # SEO Score
+                            
+                        logger.info(f"✅ Updated topic {topic_id} usage in Google Sheets")
+                        return True
+                        
+                    except Exception as cell_error:
+                        logger.warning(f"⚠️ Could not update some cells for topic {topic_id}: {cell_error}")
+                        return True  # Don't fail the whole process for cell update issues
             
-            logger.warning(f"Topic {topic_id} not found in Google Sheets")
+            logger.warning(f"⚠️ Topic {topic_id} not found in Google Sheets")
             return False
             
         except Exception as e:

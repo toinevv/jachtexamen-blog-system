@@ -221,21 +221,21 @@ class ContentGenerator:
                 logger.info("📝 Using custom OpenAI prompt from Google Sheets")
                 return sheets_prompt.format(
                     topic=topic["title"],
-                    primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
-                    secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+                    primary_keyword=topic.get("keywords", [topic["title"]])[0] if topic.get("keywords") else topic["title"],
+                    secondary_keywords=", ".join(topic.get("keywords", [])[1:4]) if len(topic.get("keywords", [])) > 1 else ""
                 )
         
         # Fallback to passed custom prompt
         if custom_prompt:
             return custom_prompt.format(
                 topic=topic["title"],
-                primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
-                secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+                primary_keyword=topic.get("keywords", [topic["title"]])[0] if topic.get("keywords") else topic["title"],
+                secondary_keywords=", ".join(topic.get("keywords", [])[1:4]) if len(topic.get("keywords", [])) > 1 else ""
             )
         
         # Use default OpenAI-specific prompt
-        primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
-        secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
+        primary_keyword = topic.get("keywords", [topic["title"]])[0] if topic.get("keywords") else topic["title"]
+        secondary_keywords = topic.get("keywords", [])[1:4] if len(topic.get("keywords", [])) > 1 else []
         
         return OPENAI_SPECIFIC_PROMPT.format(
             topic=topic["title"],
@@ -252,21 +252,21 @@ class ContentGenerator:
                 logger.info("📝 Using custom Claude prompt from Google Sheets")
                 return sheets_prompt.format(
                     topic=topic["title"],
-                    primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
-                    secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+                    primary_keyword=topic.get("keywords", [topic["title"]])[0] if topic.get("keywords") else topic["title"],
+                    secondary_keywords=", ".join(topic.get("keywords", [])[1:4]) if len(topic.get("keywords", [])) > 1 else ""
                 )
         
         # Fallback to passed custom prompt
         if custom_prompt:
             return custom_prompt.format(
                 topic=topic["title"],
-                primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
-                secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+                primary_keyword=topic.get("keywords", [topic["title"]])[0] if topic.get("keywords") else topic["title"],
+                secondary_keywords=", ".join(topic.get("keywords", [])[1:4]) if len(topic.get("keywords", [])) > 1 else ""
             )
         
         # Use default Claude-specific prompt
-        primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
-        secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
+        primary_keyword = topic.get("keywords", [topic["title"]])[0] if topic.get("keywords") else topic["title"]
+        secondary_keywords = topic.get("keywords", [])[1:4] if len(topic.get("keywords", [])) > 1 else []
         
         return CLAUDE_SPECIFIC_PROMPT.format(
             topic=topic["title"],
