@@ -21,7 +21,9 @@ from config.prompts import (
     BLOG_PROMPT_TEMPLATE, 
     TITLE_GENERATION_PROMPT, 
     META_DESCRIPTION_PROMPT,
-    EXAM_QUESTION_PROMPT
+    EXAM_QUESTION_PROMPT,
+    OPENAI_SPECIFIC_PROMPT,
+    CLAUDE_SPECIFIC_PROMPT
 )
 
 
@@ -127,11 +129,12 @@ class ContentGenerator:
     async def _generate_content_with_api(self, topic: Dict, api: str) -> Optional[str]:
         """Generate content using specified API with retry logic"""
         try:
-            prompt = self._build_content_prompt(topic)
-            
+            # Use API-specific prompts for better results
             if api == "openai":
+                prompt = self._build_openai_prompt(topic)
                 return await self._call_openai(prompt)
             elif api == "claude":
+                prompt = self._build_claude_prompt(topic)
                 return await self._call_claude(prompt)
             else:
                 raise ValueError(f"Unknown API: {api}")
@@ -141,12 +144,12 @@ class ContentGenerator:
             raise
     
     async def _call_openai(self, prompt: str) -> str:
-        """Call OpenAI API"""
+        """Call OpenAI API with specific prompting for longer content"""
         try:
             response = self.openai_client.chat.completions.create(
                 model=API_CONFIG["openai"]["model"],
                 messages=[
-                    {"role": "system", "content": "Je bent een expert in Nederlandse jacht en natuurbeheer. Schrijf professionele, educatieve content voor jachtexamen kandidaten."},
+                    {"role": "system", "content": "Je bent een expert Nederlandse jacht schrijver. Je MOET altijd artikelen van minimaal 600 woorden schrijven. Kwaliteit EN lengte zijn beide essentieel. Schrijf uitgebreid, gedetailleerd en informatief."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=API_CONFIG["openai"]["temperature"],
@@ -167,14 +170,14 @@ class ContentGenerator:
             raise
     
     async def _call_claude(self, prompt: str) -> str:
-        """Call Claude API"""
+        """Call Claude API with specific prompting for longer content"""
         try:
             response = self.claude_client.messages.create(
                 model=API_CONFIG["claude"]["model"],
                 max_tokens=API_CONFIG["claude"]["max_tokens"],
                 temperature=API_CONFIG["claude"]["temperature"],
                 top_p=API_CONFIG["claude"]["top_p"],
-                system="Je bent een expert in Nederlandse jacht en natuurbeheer. Schrijf professionele, educatieve content voor jachtexamen kandidaten.",
+                system="Je bent een ervaren Nederlandse jacht expert en schrijver. Je specialiteit is het schrijven van uitgebreide, gedetailleerde artikelen van minimaal 600 woorden. Elk artikel moet informatief, praktisch en volledig zijn. Schrijf altijd in uitgebreide, grondige stijl.",
                 messages=[
                     {"role": "user", "content": prompt}
                 ]
@@ -191,11 +194,47 @@ class ContentGenerator:
             raise
     
     def _build_content_prompt(self, topic: Dict) -> str:
-        """Build prompt for content generation"""
+        """Build prompt for content generation (fallback method)"""
         primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
         secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
         
         return BLOG_PROMPT_TEMPLATE.format(
+            topic=topic["title"],
+            primary_keyword=primary_keyword,
+            secondary_keywords=", ".join(secondary_keywords)
+        )
+    
+    def _build_openai_prompt(self, topic: Dict, custom_prompt: str = None) -> str:
+        """Build OpenAI-specific prompt optimized for longer content"""
+        if custom_prompt:
+            return custom_prompt.format(
+                topic=topic["title"],
+                primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
+                secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+            )
+        
+        primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
+        secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
+        
+        return OPENAI_SPECIFIC_PROMPT.format(
+            topic=topic["title"],
+            primary_keyword=primary_keyword,
+            secondary_keywords=", ".join(secondary_keywords)
+        )
+    
+    def _build_claude_prompt(self, topic: Dict, custom_prompt: str = None) -> str:
+        """Build Claude-specific prompt optimized for longer content"""
+        if custom_prompt:
+            return custom_prompt.format(
+                topic=topic["title"],
+                primary_keyword=topic["keywords"][0] if topic["keywords"] else topic["title"],
+                secondary_keywords=", ".join(topic["keywords"][1:4]) if len(topic["keywords"]) > 1 else ""
+            )
+        
+        primary_keyword = topic["keywords"][0] if topic["keywords"] else topic["title"]
+        secondary_keywords = topic["keywords"][1:4] if len(topic["keywords"]) > 1 else []
+        
+        return CLAUDE_SPECIFIC_PROMPT.format(
             topic=topic["title"],
             primary_keyword=primary_keyword,
             secondary_keywords=", ".join(secondary_keywords)

@@ -284,3 +284,114 @@ VERGEET NIET: Wees EXTREEM gedetailleerd. Elke paragraaf minimaal 100 woorden. G
 
 Schrijf nu het ultra-uitgebreide artikel:
 """ 
+
+# API-specific prompt templates for better length control
+OPENAI_SPECIFIC_PROMPT = """
+⚠️ CRITICAL INSTRUCTION: MINIMUM 600 WORDS REQUIRED ⚠️
+
+You are writing for a Dutch hunting exam preparation platform. This article MUST be AT LEAST 600 words.
+
+WORD COUNT REQUIREMENT: **MINIMUM 600 WORDS** - DO NOT STOP WRITING UNTIL YOU REACH THIS LENGTH!
+
+TOPIC: {topic}
+PRIMARY KEYWORD: {primary_keyword}
+SECONDARY KEYWORDS: {secondary_keywords}
+
+REQUIRED STRUCTURE (TOTAL 600+ WORDS):
+1. **TITLE**: Include primary keyword (50-60 characters)
+
+2. **INTRODUCTION** (150+ words):
+   - Hook the reader immediately
+   - Explain why this topic is crucial for the jachtexamen
+   - Preview what they'll learn
+   - Include primary keyword naturally
+
+3. **MAIN SECTION 1: Theory & Background** (200+ words):
+   - Detailed explanation of the topic
+   - Include relevant Dutch hunting laws/regulations
+   - Use primary keyword 1-2 times naturally
+   - Add concrete examples and facts
+
+4. **MAIN SECTION 2: Practical Application** (200+ words):
+   - Step-by-step practical guidance
+   - Real-world scenarios and case studies
+   - Safety considerations and best practices
+   - Include secondary keywords naturally
+
+5. **EXAM PREPARATION SECTION** (100+ words):
+   - Specific exam questions and answers
+   - Study tips and memory techniques
+   - What examiners look for
+   - Practice recommendations
+
+6. **CONCLUSION & NEXT STEPS** (80+ words):
+   - Summarize key points
+   - Motivational closing
+   - Call-to-action for practice exams
+
+CRITICAL REQUIREMENTS:
+- WRITE AT LEAST 600 WORDS - Count as you write!
+- Use primary keyword 3-4 times naturally throughout
+- Include practical Dutch hunting terminology
+- Write in professional but accessible Dutch
+- Include HTML formatting (h2, h3, ul, li tags)
+- Add internal linking suggestions
+
+⚠️ FINAL CHECK: Your article MUST be at least 600 words. If it's shorter, ADD MORE CONTENT!
+
+Write the complete article now:
+"""
+
+CLAUDE_SPECIFIC_PROMPT = """
+🎯 MANDATORY LENGTH REQUIREMENT: 600+ WORDS MINIMUM 🎯
+
+Task: Write a comprehensive Dutch hunting exam article that is AT LEAST 600 words long.
+
+CONTEXT: You're writing for jachtexamen.nl - candidates need detailed, practical information.
+
+TOPIC: {topic}
+TARGET KEYWORDS: {primary_keyword}, {secondary_keywords}
+
+WRITING FRAMEWORK (Aim for 600-800 words total):
+
+**SECTION 1: Compelling Introduction (150-200 words)**
+- Start with an engaging opening about why this matters for hunters
+- Establish the importance for the jachtexamen
+- Include your primary keyword "{primary_keyword}" naturally
+- Create reader anticipation for what they'll learn
+
+**SECTION 2: Comprehensive Theory (200-250 words)**
+- Provide in-depth theoretical background
+- Include relevant Dutch hunting regulations
+- Explain scientific/biological aspects if applicable
+- Use concrete examples from Dutch hunting scenarios
+- Weave in primary keyword 1-2 more times
+
+**SECTION 3: Hands-On Practical Guidance (200-250 words)**
+- Detailed step-by-step instructions
+- Real hunting situations and how to handle them
+- Safety protocols and best practices
+- Equipment recommendations if relevant
+- Include secondary keywords: {secondary_keywords}
+
+**SECTION 4: Exam Success Tips (100-150 words)**
+- Specific questions that appear on the jachtexamen
+- Memory techniques for remembering key facts
+- Common mistakes to avoid
+- Practice recommendations
+
+**SECTION 5: Action-Oriented Conclusion (50-100 words)**
+- Recap the most important points
+- Motivate continued learning
+- Direct to practice resources
+
+QUALITY STANDARDS:
+✅ Minimum 600 words (essential!)
+✅ Professional Dutch language
+✅ Include primary keyword 3-4 times naturally
+✅ Use HTML formatting: <h2>, <h3>, <ul>, <li>
+✅ Practical focus for exam candidates
+✅ Include internal linking opportunities
+
+📝 BEGIN WRITING YOUR 600+ WORD ARTICLE NOW:
+""" 
