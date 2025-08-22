@@ -109,9 +109,9 @@ GOOGLE_NEWS_CONFIG = {
 
 # Publishing Schedule
 PUBLISHING_SCHEDULE = {
-    "frequency": "daily",
+    "frequency": "every_3_days",
     "optimal_times": ["09:00", "14:00"],  # CET/CEST
-    "posts_per_week": 5,
+    "posts_per_month": 10,
     "categories_rotation": True,
     
     "seasonal_topics": {
@@ -136,18 +136,18 @@ ERROR_HANDLING = {
         "alert_on_persistent_failure": True
     },
     "content_validation_errors": {
-        "min_word_count_fallback": 800,
-        "regenerate_on_quality_fail": True,
+        "min_word_count_fallback": 1000,
+        "regenerate_on_quality_fail": False,
         "manual_review_queue": True
     }
 }
 
 # Quality Assurance Requirements
 QA_REQUIREMENTS = {
-    "min_words": 400,  # Achievable minimum for quality articles
+    "min_words": 1000,  # Increased minimum for comprehensive articles
     "max_words": 3000,  # Allow comprehensive articles
-    "min_paragraphs": 4,  # Slightly reduced
-    "required_sections": ["inleiding", "conclusie"],
+    "min_paragraphs": 5,  # Ensure good structure
+    "required_sections": [],  # Remove strict section requirements
     "keyword_density_min": 0.005,  # More lenient keyword density
     "keyword_density_max": 0.03,
     "min_internal_links": 2,  # Slightly reduced

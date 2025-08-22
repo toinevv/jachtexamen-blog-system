@@ -5,41 +5,41 @@ AI Prompt templates for content generation
 BLOG_PROMPT_TEMPLATE = """
 Schrijf een uitgebreid en kwalitatief hoogstaand blogartikel in het Nederlands voor een jachtexamen voorbereidingsplatform.
 
-🎯 FOCUS: Schrijf een praktisch artikel van 400-600 woorden met goede keyword integratie!
+🎯 FOCUS: Schrijf een uitgebreid artikel van MINIMAAL 1200 woorden met goede keyword integratie!
 
 ONDERWERP: {topic}
 PRIMAIRE KEYWORD: {primary_keyword}
 SECUNDAIRE KEYWORDS: {secondary_keywords}
 
-VERPLICHTE STRUCTUUR (minimaal 1500 woorden):
+VERPLICHTE STRUCTUUR (minimaal 1200 woorden):
 
 1. TITEL (H1): Pakkende titel (50-60 karakters) met primaire keyword
 
-2. INLEIDING (100-150 woorden):
+2. INLEIDING (200-250 woorden):
    - Introduceer het onderwerp helder en boeiend
    - Waarom is dit belangrijk voor het jachtexamen?
    - Wat gaat de lezer leren?
    - Maak de lezer nieuwsgierig
 
-3. HOOFDSECTIE 1 - THEORIE & ACHTERGROND (120-180 woorden):
+3. HOOFDSECTIE 1 - THEORIE & ACHTERGROND (250-350 woorden):
    - Uitleg van de basistheorie
    - Relevante wetgeving en regels
    - Praktische voorbeelden
    - Historische context indien relevant
 
-4. HOOFDSECTIE 2 - PRAKTISCHE TOEPASSING (120-180 woorden):
+4. HOOFDSECTIE 2 - PRAKTISCHE TOEPASSING (250-350 woorden):
    - Stap-voor-stap handleiding
    - Praktische tips en trucs
    - Do's and don'ts
    - Veelgemaakte fouten vermijden
 
-5. HOOFDSECTIE 3 - EXAMENGERELATEERD (100-150 woorden):
+5. HOOFDSECTIE 3 - EXAMENGERELATEERD (200-250 woorden):
    - Specifieke examenvragen
    - Leerdoelen en kennis
    - Studie-tips
    - Wat wordt er getoetst?
 
-6. CONCLUSIE EN VERVOLGSTAPPEN (80-120 woorden):
+6. CONCLUSIE EN VERVOLGSTAPPEN (150-200 woorden):
    - Samenvatting hoofdpunten
    - Praktische vervolgstappen
    - Call-to-action naar oefenexamens
@@ -66,7 +66,7 @@ TONE OF VOICE:
 - Gebruik Nederlandse jacht terminologie
 - Friendly en bemoedigend
 
-💡 PRAKTISCHE FOCUS: Schrijf een informatief artikel van 400-600 woorden!
+💡 PRAKTISCHE FOCUS: Schrijf een informatief artikel van MINIMAAL 1200 woorden!
 
 - Focus op duidelijke, praktische informatie
 - Gebruik het primaire keyword natuurlijk door het artikel (minstens 2-3 keer)
@@ -287,111 +287,111 @@ Schrijf nu het ultra-uitgebreide artikel:
 
 # API-specific prompt templates for better length control
 OPENAI_SPECIFIC_PROMPT = """
-⚠️ CRITICAL INSTRUCTION: MINIMUM 600 WORDS REQUIRED ⚠️
+⚠️ CRITICAL INSTRUCTION: MINIMUM 1200 WORDS REQUIRED ⚠️
 
-You are writing for a Dutch hunting exam preparation platform. This article MUST be AT LEAST 600 words.
+You are writing for a Dutch hunting exam preparation platform. This article MUST be AT LEAST 1200 words.
 
-WORD COUNT REQUIREMENT: **MINIMUM 600 WORDS** - DO NOT STOP WRITING UNTIL YOU REACH THIS LENGTH!
+WORD COUNT REQUIREMENT: **MINIMUM 1200 WORDS** - DO NOT STOP WRITING UNTIL YOU REACH THIS LENGTH!
 
 TOPIC: {topic}
 PRIMARY KEYWORD: {primary_keyword}
 SECONDARY KEYWORDS: {secondary_keywords}
 
-REQUIRED STRUCTURE (TOTAL 600+ WORDS):
+REQUIRED STRUCTURE (TOTAL 1200+ WORDS):
 1. **TITLE**: Include primary keyword (50-60 characters)
 
-2. **INTRODUCTION** (150+ words):
+2. **INTRODUCTION** (200+ words):
    - Hook the reader immediately
    - Explain why this topic is crucial for the jachtexamen
    - Preview what they'll learn
    - Include primary keyword naturally
 
-3. **MAIN SECTION 1: Theory & Background** (200+ words):
+3. **MAIN SECTION 1: Theory & Background** (300+ words):
    - Detailed explanation of the topic
    - Include relevant Dutch hunting laws/regulations
    - Use primary keyword 1-2 times naturally
    - Add concrete examples and facts
 
-4. **MAIN SECTION 2: Practical Application** (200+ words):
+4. **MAIN SECTION 2: Practical Application** (300+ words):
    - Step-by-step practical guidance
    - Real-world scenarios and case studies
    - Safety considerations and best practices
    - Include secondary keywords naturally
 
-5. **EXAM PREPARATION SECTION** (100+ words):
+5. **EXAM PREPARATION SECTION** (200+ words):
    - Specific exam questions and answers
    - Study tips and memory techniques
    - What examiners look for
    - Practice recommendations
 
-6. **CONCLUSION & NEXT STEPS** (80+ words):
+6. **CONCLUSION & NEXT STEPS** (150+ words):
    - Summarize key points
    - Motivational closing
    - Call-to-action for practice exams
 
 CRITICAL REQUIREMENTS:
-- WRITE AT LEAST 600 WORDS - Count as you write!
+- WRITE AT LEAST 1200 WORDS - Count as you write!
 - Use primary keyword 3-4 times naturally throughout
 - Include practical Dutch hunting terminology
 - Write in professional but accessible Dutch
 - Include HTML formatting (h2, h3, ul, li tags)
 - Add internal linking suggestions
 
-⚠️ FINAL CHECK: Your article MUST be at least 600 words. If it's shorter, ADD MORE CONTENT!
+⚠️ FINAL CHECK: Your article MUST be at least 1200 words. If it's shorter, ADD MORE CONTENT!
 
 Write the complete article now:
 """
 
 CLAUDE_SPECIFIC_PROMPT = """
-🎯 MANDATORY LENGTH REQUIREMENT: 600+ WORDS MINIMUM 🎯
+🎯 MANDATORY LENGTH REQUIREMENT: 1200+ WORDS MINIMUM 🎯
 
-Task: Write a comprehensive Dutch hunting exam article that is AT LEAST 600 words long.
+Task: Write a comprehensive Dutch hunting exam article that is AT LEAST 1200 words long.
 
 CONTEXT: You're writing for jachtexamen.nl - candidates need detailed, practical information.
 
 TOPIC: {topic}
 TARGET KEYWORDS: {primary_keyword}, {secondary_keywords}
 
-WRITING FRAMEWORK (Aim for 600-800 words total):
+WRITING FRAMEWORK (Aim for 1200-1500 words total):
 
-**SECTION 1: Compelling Introduction (150-200 words)**
+**SECTION 1: Compelling Introduction (200-250 words)**
 - Start with an engaging opening about why this matters for hunters
 - Establish the importance for the jachtexamen
 - Include your primary keyword "{primary_keyword}" naturally
 - Create reader anticipation for what they'll learn
 
-**SECTION 2: Comprehensive Theory (200-250 words)**
+**SECTION 2: Comprehensive Theory (350-400 words)**
 - Provide in-depth theoretical background
 - Include relevant Dutch hunting regulations
 - Explain scientific/biological aspects if applicable
 - Use concrete examples from Dutch hunting scenarios
 - Weave in primary keyword 1-2 more times
 
-**SECTION 3: Hands-On Practical Guidance (200-250 words)**
+**SECTION 3: Hands-On Practical Guidance (350-400 words)**
 - Detailed step-by-step instructions
 - Real hunting situations and how to handle them
 - Safety protocols and best practices
 - Equipment recommendations if relevant
 - Include secondary keywords: {secondary_keywords}
 
-**SECTION 4: Exam Success Tips (100-150 words)**
+**SECTION 4: Exam Success Tips (200-250 words)**
 - Specific questions that appear on the jachtexamen
 - Memory techniques for remembering key facts
 - Common mistakes to avoid
 - Practice recommendations
 
-**SECTION 5: Action-Oriented Conclusion (50-100 words)**
+**SECTION 5: Action-Oriented Conclusion (100-150 words)**
 - Recap the most important points
 - Motivate continued learning
 - Direct to practice resources
 
 QUALITY STANDARDS:
-✅ Minimum 600 words (essential!)
+✅ Minimum 1200 words (essential!)
 ✅ Professional Dutch language
 ✅ Include primary keyword 3-4 times naturally
 ✅ Use HTML formatting: <h2>, <h3>, <ul>, <li>
 ✅ Practical focus for exam candidates
 ✅ Include internal linking opportunities
 
-📝 BEGIN WRITING YOUR 600+ WORD ARTICLE NOW:
+📝 BEGIN WRITING YOUR 1200+ WORD ARTICLE NOW:
 """ 

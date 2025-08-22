@@ -1,6 +1,6 @@
 # 🚂 Railway Deployment Guide
 
-Complete guide to deploy the Jachtexamen Blog System on Railway for automated content generation every 1-3 days.
+Complete guide to deploy the Jachtexamen Blog System on Railway for automated content generation every 3 days.
 
 ## 🎯 **Why Railway?**
 
@@ -95,8 +95,7 @@ TIMEZONE=Europe/Amsterdam
 
 # Railway-specific Settings
 RAILWAY_RUN_MODE=continuous
-MIN_DAYS_BETWEEN_POSTS=1
-MAX_DAYS_BETWEEN_POSTS=3
+DAYS_BETWEEN_POSTS=3
 ```
 
 ### **6. Configure Railway Cron**

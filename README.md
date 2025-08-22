@@ -1,12 +1,12 @@
 # 🎯 Automated Dutch Hunting Exam Blog System
 
-An intelligent, automated blog content generation system specifically designed for Dutch hunting exam (jachtexamen) preparation platforms. This system automatically generates high-quality, SEO-optimized Dutch articles about hunting topics every 1-3 days.
+An intelligent, automated blog content generation system specifically designed for Dutch hunting exam (jachtexamen) preparation platforms. This system automatically generates high-quality, SEO-optimized Dutch articles about hunting topics every 3 days.
 
 ## 🚀 **Features**
 
 ### **🤖 AI-Powered Content Generation**
 - Rotating OpenAI GPT-4 and Claude API integration
-- 1000+ word articles in perfect Dutch
+- 1200+ word articles in perfect Dutch
 - Hunting exam-focused content
 - Quality assurance and validation
 
@@ -31,7 +31,7 @@ An intelligent, automated blog content generation system specifically designed f
 - Performance analytics
 
 ### **⏰ Automated Scheduling**
-- Railway deployment with 1-3 day random intervals
+- Railway deployment with fixed 3-day intervals
 - Continuous monitoring and health checks
 - Error handling and recovery
 - Maintenance automation
@@ -46,7 +46,7 @@ An intelligent, automated blog content generation system specifically designed f
                                                         │
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │ Railway Worker  │ <- │ Supabase Store  │ <- │ Content + SEO   │
-│ 1-3 Day Cycle   │    │ Full Metadata   │    │  Rich Data      │
+│ 3 Day Cycle     │    │ Full Metadata   │    │  Rich Data      │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
@@ -88,15 +88,14 @@ GOOGLE_NEWS_API_KEY=your_google_news_api_key_here
 
 # Railway Settings
 RAILWAY_RUN_MODE=continuous
-MIN_DAYS_BETWEEN_POSTS=1
-MAX_DAYS_BETWEEN_POSTS=3
+DAYS_BETWEEN_POSTS=3
 ENVIRONMENT=production
 ```
 
 ## 📈 **Performance**
 
 ### **Output Quality**
-- ✅ 1000-1500 words per article
+- ✅ 1200-1500 words per article
 - ✅ 85+ SEO score
 - ✅ Native Dutch language
 - ✅ Exam-relevant content
@@ -193,7 +192,7 @@ Once deployed, your system will automatically:
 3. **🎨 Optimize for SEO** with titles, meta descriptions, and schema
 4. **💾 Store in database** with rich metadata and analytics
 5. **📊 Track performance** and maintain topic pool
-6. **🔄 Repeat every 1-3 days** for consistent content flow
+6. **🔄 Repeat every 3 days** for consistent content flow
 
 ## 💰 **Cost Estimation**
 

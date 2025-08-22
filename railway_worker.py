@@ -136,7 +136,7 @@ class RailwayBlogWorker:
 
 
 def should_run_today() -> bool:
-    """Determine if we should run today based on random 1-3 day interval"""
+    """Determine if we should run today based on fixed 3 day interval"""
     
     # Check if we have a last run file
     last_run_file = "/tmp/last_blog_run.txt"
@@ -150,13 +150,8 @@ def should_run_today() -> bool:
             # Calculate days since last run
             days_since_last = (datetime.now() - last_run).days
             
-            # Random interval between 1-3 days
-            min_days = int(os.getenv('MIN_DAYS_BETWEEN_POSTS', '1'))
-            max_days = int(os.getenv('MAX_DAYS_BETWEEN_POSTS', '3'))
-            
-            # Use a deterministic random based on date for consistency
-            random.seed(datetime.now().strftime("%Y-%m-%d"))
-            required_days = random.randint(min_days, max_days)
+            # Fixed 3 day interval
+            required_days = int(os.getenv('DAYS_BETWEEN_POSTS', '3'))
             
             logger.info(f"📅 Days since last run: {days_since_last}, Required: {required_days}")
             

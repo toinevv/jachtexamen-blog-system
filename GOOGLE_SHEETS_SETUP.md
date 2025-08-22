@@ -40,7 +40,7 @@ Complete guide to set up your Google Sheets dashboard for topic management and a
 2. **Name it**: `Jachtexamen Blog Dashboard`
 3. **Copy the Spreadsheet ID** from URL:
    ```
-   https://docs.google.com/spreadsheets/d/SPREADSHEET_ID_HERE/edit
+   https://docs.google.com/spreadsheets/d/18Ek08nkUhgiMZku97X2Si93Vyfun1miQSHkXsfZeUgM/edit?gid=0#gid=0
    ```
 
 ### **Step 3: Share Sheet with Service Account**

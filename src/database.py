@@ -42,10 +42,20 @@ class DatabaseManager:
             # Prepare article data for database
             db_article = self._prepare_article_for_db(article_data)
             
-            # Check for duplicates
+            # Check for duplicates and make slug unique if necessary
+            original_slug = db_article["slug"]
             if await self._check_duplicate(db_article["slug"]):
-                logger.warning(f"Article with slug '{db_article['slug']}' already exists")
-                return None
+                # Add timestamp to make it unique
+                timestamp = datetime.now().strftime("%Y%m%d")
+                db_article["slug"] = f"{original_slug}-{timestamp}"
+                logger.info(f"Slug already exists, using unique slug: {db_article['slug']}")
+                
+                # Check again with new slug
+                if await self._check_duplicate(db_article["slug"]):
+                    # If still duplicate, add hour/minute
+                    timestamp = datetime.now().strftime("%Y%m%d-%H%M")
+                    db_article["slug"] = f"{original_slug}-{timestamp}"
+                    logger.info(f"Using more unique slug: {db_article['slug']}")
             
             # Insert article
             result = self.supabase.table(self.table_name).insert(db_article).execute()

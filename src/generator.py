@@ -423,13 +423,11 @@ class ContentGenerator:
             logger.warning(f"Title length issue: {len(title)} characters")
             return False
         
-        # Check for required sections
-        content_lower = content.lower()
-        has_intro = any(section in content_lower for section in ["inleiding", "introductie"])
-        has_conclusion = any(section in content_lower for section in ["conclusie", "samenvatting", "slot"])
-        
-        if not (has_intro and has_conclusion):
-            logger.warning("Missing required sections (intro/conclusion)")
+        # Check for basic structure instead of specific sections
+        # This is more lenient and prevents unnecessary regenerations
+        paragraphs = content.split('\n\n')
+        if len(paragraphs) < 4:  # At least 4 paragraphs for structure
+            logger.warning(f"Content lacks proper structure: only {len(paragraphs)} paragraphs")
             return False
         
         # Check keyword density
