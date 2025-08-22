@@ -1,0 +1,266 @@
+{
+  "topics": [
+    {
+      "id": 1,
+      "title": "De Complete Gids voor Nederlandse Zoogdieren - Jachtexamen 2024",
+      "keywords": ["nederlandse zoogdieren", "jachtexamen", "wild herkenning"],
+      "used": false,
+      "category": "wild",
+      "priority": "high"
+    },
+    {
+      "id": 2,
+      "title": "Watervogels Herkennen: 15 Soorten die Je Moet Kennen",
+      "keywords": ["watervogels", "vogel herkenning", "jacht"],
+      "used": false,
+      "category": "wild",
+      "priority": "high"
+    },
+    {
+      "id": 3,
+      "title": "Bosvogels en Hun Gedrag - Essentiële Kennis voor Jagers",
+      "keywords": ["bosvogels", "vogel gedrag", "jachtexamen"],
+      "used": false,
+      "category": "wild",
+      "priority": "medium"
+    },
+    {
+      "id": 4,
+      "title": "Reeën in Nederland: Gedrag, Habitat en Jachttechnieken",
+      "keywords": ["reeën", "ree gedrag", "jachttechnieken"],
+      "used": false,
+      "category": "wild",
+      "priority": "high"
+    },
+    {
+      "id": 5,
+      "title": "Wilde Zwijnen: Alles over Gedrag en Veilige Jacht",
+      "keywords": ["wilde zwijnen", "everzwijn", "veilige jacht"],
+      "used": false,
+      "category": "wild",
+      "priority": "high"
+    },
+    {
+      "id": 6,
+      "title": "Fazanten en Patrijzen: Verschillen en Jachtstrategieën",
+      "keywords": ["fazanten", "patrijzen", "jachtstrategieën"],
+      "used": false,
+      "category": "wild",
+      "priority": "medium"
+    },
+    {
+      "id": 7,
+      "title": "Nederlandse Eendachtigen: Complete Overzicht",
+      "keywords": ["eenden", "waterwild", "nederland"],
+      "used": false,
+      "category": "wild",
+      "priority": "medium"
+    },
+    {
+      "id": 8,
+      "title": "Hazen vs Konijnen: Herkenning en Jachttechnieken",
+      "keywords": ["hazen", "konijnen", "herkenning"],
+      "used": false,
+      "category": "wild",
+      "priority": "medium"
+    },
+    {
+      "id": 9,
+      "title": "Damherten: Leefwijze en Populatiebeheer",
+      "keywords": ["damherten", "populatiebeheer", "hertachtigen"],
+      "used": false,
+      "category": "wild",
+      "priority": "medium"
+    },
+    {
+      "id": 10,
+      "title": "Vossen in Nederland: Gedrag en Beheer",
+      "keywords": ["vossen", "roofdieren", "wildbeheer"],
+      "used": false,
+      "category": "wild",
+      "priority": "medium"
+    },
+    {
+      "id": 11,
+      "title": "Giftige Planten in Nederlandse Bossen - Veiligheid voor Jagers",
+      "keywords": ["giftige planten", "veiligheid", "bossen nederland"],
+      "used": false,
+      "category": "planten",
+      "priority": "high"
+    },
+    {
+      "id": 12,
+      "title": "Eetbare Wilde Planten: Wat Mag en Wat Niet",
+      "keywords": ["eetbare planten", "wilde planten", "verzamelen"],
+      "used": false,
+      "category": "planten",
+      "priority": "medium"
+    },
+    {
+      "id": 13,
+      "title": "Bomen Herkennen: 20 Belangrijkste Soorten",
+      "keywords": ["bomen herkennen", "boskennis", "plantenkennis"],
+      "used": false,
+      "category": "planten",
+      "priority": "medium"
+    },
+    {
+      "id": 14,
+      "title": "Struiken en Heesters in Nederlandse Jachtgebieden",
+      "keywords": ["struiken", "heesters", "jachtgebieden"],
+      "used": false,
+      "category": "planten",
+      "priority": "low"
+    },
+    {
+      "id": 15,
+      "title": "Paddenstoelen in het Bos: Veilig Verzamelen",
+      "keywords": ["paddenstoelen", "bos", "veilig verzamelen"],
+      "used": false,
+      "category": "planten",
+      "priority": "medium"
+    },
+    {
+      "id": 16,
+      "title": "Nederlandse Jachthondenrassen: Complete Overzicht",
+      "keywords": ["jachthonden", "hondenrassen", "nederland"],
+      "used": false,
+      "category": "jachthonden",
+      "priority": "high"
+    },
+    {
+      "id": 17,
+      "title": "Training van Jachthonden: Basis Technieken",
+      "keywords": ["hondentraining", "jachthond training", "technieken"],
+      "used": false,
+      "category": "jachthonden",
+      "priority": "high"
+    },
+    {
+      "id": 18,
+      "title": "Gezondheid en Verzorging van Jachthonden",
+      "keywords": ["honden gezondheid", "verzorging", "jachthonden"],
+      "used": false,
+      "category": "jachthonden",
+      "priority": "medium"
+    },
+    {
+      "id": 19,
+      "title": "Verschillende Jachttypen en Bijbehorende Honden",
+      "keywords": ["jachttypen", "honden soorten", "jacht"],
+      "used": false,
+      "category": "jachthonden",
+      "priority": "medium"
+    },
+    {
+      "id": 20,
+      "title": "Nederlandse Jachtwet 2024: Alle Belangrijke Wijzigingen",
+      "keywords": ["jachtwet", "wetgeving 2024", "wijzigingen"],
+      "used": false,
+      "category": "regelgeving",
+      "priority": "high"
+    },
+    {
+      "id": 21,
+      "title": "Jachtseizoen Kalender: Wanneer Mag Je Wat Jagen",
+      "keywords": ["jachtseizoen", "kalender", "wanneer jagen"],
+      "used": false,
+      "category": "regelgeving",
+      "priority": "high"
+    },
+    {
+      "id": 22,
+      "title": "Jachtakte Voorwaarden en Verplichtingen",
+      "keywords": ["jachtakte", "voorwaarden", "verplichtingen"],
+      "used": false,
+      "category": "regelgeving",
+      "priority": "high"
+    },
+    {
+      "id": 23,
+      "title": "Wildschade en Aansprakelijkheid",
+      "keywords": ["wildschade", "aansprakelijkheid", "schade"],
+      "used": false,
+      "category": "regelgeving",
+      "priority": "medium"
+    },
+    {
+      "id": 24,
+      "title": "Jachtpacht en Toestemming: Wat Moet Je Weten",
+      "keywords": ["jachtpacht", "toestemming", "pacht"],
+      "used": false,
+      "category": "regelgeving",
+      "priority": "medium"
+    },
+    {
+      "id": 25,
+      "title": "Jachtvuurwapens: Kalibers en Toepassingen",
+      "keywords": ["jachtvuurwapens", "kalibers", "vuurwapens"],
+      "used": false,
+      "category": "vuurwapens",
+      "priority": "high"
+    },
+    {
+      "id": 26,
+      "title": "Veilig Omgaan met Jachtwapens",
+      "keywords": ["veiligheid", "jachtwapens", "veilig omgaan"],
+      "used": false,
+      "category": "vuurwapens",
+      "priority": "high"
+    },
+    {
+      "id": 27,
+      "title": "Munitie Keuze voor Verschillende Wildsoorten",
+      "keywords": ["munitie", "wildsoorten", "keuze"],
+      "used": false,
+      "category": "vuurwapens",
+      "priority": "medium"
+    },
+    {
+      "id": 28,
+      "title": "Onderhoud van Jachtvuurwapens",
+      "keywords": ["onderhoud", "jachtvuurwapens", "verzorging"],
+      "used": false,
+      "category": "vuurwapens",
+      "priority": "medium"
+    },
+    {
+      "id": 29,
+      "title": "Jachtexamen Voorbereiding: 10 Essentiële Tips",
+      "keywords": ["jachtexamen", "voorbereiding", "tips"],
+      "used": false,
+      "category": "examenvorbereiding",
+      "priority": "high"
+    },
+    {
+      "id": 30,
+      "title": "Meest Gemaakte Fouten bij het Jachtexamen",
+      "keywords": ["jachtexamen fouten", "veelgemaakte fouten", "examen"],
+      "used": false,
+      "category": "examenvorbereiding",
+      "priority": "high"
+    }
+  ],
+  "categories": [
+    "wild",
+    "planten", 
+    "jachthonden",
+    "regelgeving",
+    "vuurwapens",
+    "examenvorbereiding",
+    "seizoenen",
+    "veiligheid"
+  ],
+  "google_news_keywords": [
+    "jacht nederland",
+    "natuurbeheer",
+    "wildbeheer",
+    "jachtseizoen",
+    "fauna beheer",
+    "nederlandse jagers",
+    "wildschade",
+    "jachtexamen"
+  ],
+  "last_updated": "2024-01-15",
+  "next_topic_id": 31
+} 
