@@ -483,26 +483,32 @@ class ContentGenerator:
     async def _generate_exam_questions(self, article: Dict) -> List[Dict]:
         """Generate exam questions based on article content"""
         try:
+            # Skip exam question generation to save API costs and avoid errors
+            # These are optional and were causing issues
+            logger.info("Skipping exam question generation to save costs")
+            return []
+            
+            # Original code commented out but kept for reference:
             # Get first 500 words of content for question generation
-            text_content = re.sub(r'<[^>]+>', '', article["content"])
-            content_excerpt = ' '.join(text_content.split()[:500])
-            
-            prompt = EXAM_QUESTION_PROMPT.format(
-                article_content=content_excerpt,
-                main_topic=article["title"]
-            )
-            
-            # Use the last used API
-            api_to_use = self.last_used_api
-            questions_json = await self._generate_content_with_api({"title": "questions"}, api_to_use)
-            
-            # Parse JSON response
-            try:
-                questions = json.loads(questions_json)
-                return questions if isinstance(questions, list) else []
-            except json.JSONDecodeError:
-                logger.warning("Failed to parse exam questions JSON")
-                return []
+            # text_content = re.sub(r'<[^>]+>', '', article["content"])
+            # content_excerpt = ' '.join(text_content.split()[:500])
+            # 
+            # prompt = EXAM_QUESTION_PROMPT.format(
+            #     article_content=content_excerpt,
+            #     main_topic=article["title"]
+            # )
+            # 
+            # # Use the last used API
+            # api_to_use = self.last_used_api
+            # questions_json = await self._generate_content_with_api({"title": "questions"}, api_to_use)
+            # 
+            # # Parse JSON response
+            # try:
+            #     questions = json.loads(questions_json)
+            #     return questions if isinstance(questions, list) else []
+            # except json.JSONDecodeError:
+            #     logger.warning("Failed to parse exam questions JSON")
+            #     return []
                 
         except Exception as e:
             logger.error(f"Error generating exam questions: {e}")
