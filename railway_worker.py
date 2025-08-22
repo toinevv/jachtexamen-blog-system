@@ -209,7 +209,7 @@ def run_continuous_mode():
     import threading
     from health_server import start_health_server
     
-    logger.info("🔄 Starting continuous mode (checking every hour)")
+    logger.info("🔄 Starting continuous mode (checking every 24 hours)")
     
     # Start health server in background thread
     health_port = int(os.getenv('PORT', 8000))
@@ -227,9 +227,9 @@ def run_continuous_mode():
             # Check once per hour
             asyncio.run(main())
             
-            # Wait 1 hour before next check
-            logger.info("😴 Sleeping for 1 hour until next check...")
-            time.sleep(3600)
+            # Wait 24 hours before next check (since we only publish every 3 days)
+            logger.info("😴 Sleeping for 24 hours until next check...")
+            time.sleep(86400)  # 24 hours
             
         except KeyboardInterrupt:
             logger.info("👋 Stopping continuous mode")
