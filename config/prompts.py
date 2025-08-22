@@ -5,13 +5,13 @@ AI Prompt templates for content generation
 BLOG_PROMPT_TEMPLATE = """
 Schrijf een uitgebreid en kwalitatief hoogstaand blogartikel in het Nederlands voor een jachtexamen voorbereidingsplatform.
 
-🎯 FOCUS: Schrijf een kwalitatief artikel van 600-800 woorden met goede keyword integratie!
+🎯 FOCUS: Schrijf een kwalitatief artikel van MINIMAAL 700 woorden met goede keyword integratie!
 
 ONDERWERP: {topic}
 PRIMAIRE KEYWORD: {primary_keyword}
 SECUNDAIRE KEYWORDS: {secondary_keywords}
 
-VERPLICHTE STRUCTUUR (streef naar 600-800 woorden):
+VERPLICHTE STRUCTUUR (MINIMAAL 700 woorden, liefst 800):
 
 1. TITEL (H1): Pakkende titel (50-60 karakters) met primaire keyword
 
@@ -66,7 +66,7 @@ TONE OF VOICE:
 - Gebruik Nederlandse jacht terminologie
 - Friendly en bemoedigend
 
-💡 PRAKTISCHE FOCUS: Schrijf een informatief artikel van 600-800 woorden!
+💡 PRAKTISCHE FOCUS: Schrijf een informatief artikel van MINIMAAL 700 woorden!
 
 - Focus op duidelijke, praktische informatie
 - Gebruik het primaire keyword natuurlijk door het artikel (minstens 2-3 keer)
@@ -287,17 +287,17 @@ Schrijf nu het ultra-uitgebreide artikel:
 
 # API-specific prompt templates for better length control
 OPENAI_SPECIFIC_PROMPT = """
-⚠️ TARGET LENGTH: 600-800 WORDS FOR OPTIMAL QUALITY ⚠️
+⚠️ MINIMUM LENGTH: 700 WORDS REQUIRED ⚠️
 
-You are writing for a Dutch hunting exam preparation platform. Aim for 600-800 words of high-quality content.
+You are writing for a Dutch hunting exam preparation platform. Write AT LEAST 700 words of high-quality content.
 
-WORD COUNT TARGET: **600-800 WORDS** - Focus on quality over quantity!
+WORD COUNT REQUIREMENT: **MINIMUM 700 WORDS** - Be comprehensive!
 
 TOPIC: {topic}
 PRIMARY KEYWORD: {primary_keyword}
 SECONDARY KEYWORDS: {secondary_keywords}
 
-REQUIRED STRUCTURE (TOTAL 600-800 WORDS):
+REQUIRED STRUCTURE (MINIMUM 700 WORDS):
 1. **TITLE**: Include primary keyword (50-60 characters)
 
 2. **INTRODUCTION** (100-150 words):
@@ -330,29 +330,29 @@ REQUIRED STRUCTURE (TOTAL 600-800 WORDS):
    - Call-to-action for practice exams
 
 CRITICAL REQUIREMENTS:
-- AIM FOR 600-800 WORDS - Quality over quantity!
+- WRITE AT LEAST 700 WORDS - Be thorough!
 - Use primary keyword 3-4 times naturally throughout
 - Include practical Dutch hunting terminology
 - Write in professional but accessible Dutch
 - Include HTML formatting (h2, h3, ul, li tags)
 - Add internal linking suggestions
 
-⚠️ FINAL CHECK: Aim for 600-800 words of high-quality, focused content!
+⚠️ FINAL CHECK: Must be at least 700 words! Add more detail if needed!
 
 Write the complete article now:
 """
 
 CLAUDE_SPECIFIC_PROMPT = """
-🎯 TARGET LENGTH: 600-800 WORDS FOR BEST RESULTS 🎯
+🎯 MINIMUM LENGTH: 700 WORDS REQUIRED 🎯
 
-Task: Write a comprehensive Dutch hunting exam article that is 600-800 words long.
+Task: Write a comprehensive Dutch hunting exam article that is AT LEAST 700 words long.
 
 CONTEXT: You're writing for jachtexamen.nl - candidates need detailed, practical information.
 
 TOPIC: {topic}
 TARGET KEYWORDS: {primary_keyword}, {secondary_keywords}
 
-WRITING FRAMEWORK (Aim for 600-800 words total):
+WRITING FRAMEWORK (Minimum 700 words, aim for 800):
 
 **SECTION 1: Compelling Introduction (100-150 words)**
 - Start with an engaging opening about why this matters for hunters
@@ -386,12 +386,12 @@ WRITING FRAMEWORK (Aim for 600-800 words total):
 - Direct to practice resources
 
 QUALITY STANDARDS:
-✅ Target 600-800 words (quality focused!)
+✅ Minimum 700 words (be comprehensive!)
 ✅ Professional Dutch language
 ✅ Include primary keyword 3-4 times naturally
 ✅ Use HTML formatting: <h2>, <h3>, <ul>, <li>
 ✅ Practical focus for exam candidates
 ✅ Include internal linking opportunities
 
-📝 BEGIN WRITING YOUR 600-800 WORD ARTICLE NOW:
+📝 BEGIN WRITING YOUR 700+ WORD ARTICLE NOW:
 """ 

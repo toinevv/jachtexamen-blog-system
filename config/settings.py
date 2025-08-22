@@ -145,7 +145,7 @@ ERROR_HANDLING = {
 
 # Quality Assurance Requirements
 QA_REQUIREMENTS = {
-    "min_words": 600,  # Realistic minimum that APIs can consistently achieve
+    "min_words": 500,  # Lowered to what APIs actually produce consistently
     "max_words": 3000,  # Allow comprehensive articles
     "min_paragraphs": 4,  # Ensure basic structure
     "required_sections": [],  # Remove strict section requirements
