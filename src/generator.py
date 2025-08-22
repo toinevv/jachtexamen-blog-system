@@ -352,6 +352,20 @@ class ContentGenerator:
     
     def _clean_and_format_content(self, content: str, title: str) -> str:
         """Clean and format content to proper HTML"""
+        # Remove common AI meta-commentary patterns
+        meta_patterns = [
+            r'^Here is the \d+\+ word .*?:?\s*\n+',  # "Here is the 700+ word article:"
+            r'^Here\'s the .*? article.*?:?\s*\n+',  # "Here's the Dutch article:"
+            r'^The following is .*?:?\s*\n+',  # "The following is..."
+            r'^Below is .*?:?\s*\n+',  # "Below is the article:"
+            r'^I\'ve written .*?:?\s*\n+',  # "I've written..."
+            r'^This is .*? article.*?:?\s*\n+',  # "This is the article:"
+            r'^\[.*?word.*?article.*?\]\s*\n+',  # "[700 word article]"
+        ]
+        
+        for pattern in meta_patterns:
+            content = re.sub(pattern, '', content, flags=re.IGNORECASE | re.MULTILINE)
+        
         # Remove the title if it appears at the beginning
         content = re.sub(rf'^#?\s*{re.escape(title)}\s*\n', '', content, flags=re.IGNORECASE)
         

@@ -74,6 +74,8 @@ TONE OF VOICE:
 - Schrijf voor examenkandidaten die snel willen leren
 - Zorg voor goede keyword dichtheid zonder het geforceerd te laten klinken
 
+⚠️ BELANGRIJK: Begin DIRECT met het artikel. GEEN introducerende zinnen zoals "Here is the article" of "Hier is het artikel". Start meteen met de inhoud!
+
 ✍️ SCHRIJF NU HET KWALITATIEVE ARTIKEL:
 """
 
@@ -339,6 +341,8 @@ CRITICAL REQUIREMENTS:
 
 ⚠️ FINAL CHECK: Must be at least 700 words! Add more detail if needed!
 
+🛑 IMPORTANT: Start IMMEDIATELY with the article content. NO meta-commentary like "Here is the article" or "Below is the text".
+
 Write the complete article now:
 """
 
@@ -392,6 +396,8 @@ QUALITY STANDARDS:
 ✅ Use HTML formatting: <h2>, <h3>, <ul>, <li>
 ✅ Practical focus for exam candidates
 ✅ Include internal linking opportunities
+
+🛑 NO META-COMMENTARY! Start directly with the article content, not with "Here is..." or "Below is...".
 
 📝 BEGIN WRITING YOUR 700+ WORD ARTICLE NOW:
 """ 
