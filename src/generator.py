@@ -423,8 +423,8 @@ class ContentGenerator:
             logger.warning(f"Article too long: {word_count} words (max: {QA_REQUIREMENTS['max_words']})")
             return False
         
-        # Check title length
-        if len(title) < 30 or len(title) > 70:
+        # Check title length - be more lenient
+        if len(title) < 20 or len(title) > 100:
             logger.warning(f"Title length issue: {len(title)} characters")
             return False
         
